@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brice Poitau Conseils — Aperçu visuel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #F4EFE3;
+    --cream-card: #FBF8F1;
+    --ink: #16212E;
+    --ink-soft: #2C3644;
+    --gold: #A9843F;
+    --gold-soft: #C9A968;
+    --line: #E3DAC5;
+    --text: #33312B;
+    --text-muted: #75705F;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces', serif;}
+  .eyebrow{
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color: var(--gold); font-weight:600;
+  }
+  a{color:inherit; text-decoration:none;}
+
+  /* ---- NAV ---- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 22px 6vw;
+    background: rgba(244,239,227,0.75);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    transition: padding .3s ease;
+  }
+  .logo{font-family:'Fraunces',serif; font-size:20px; font-weight:600; letter-spacing:.01em; color:var(--ink);}
+  .logo span{color:var(--gold);}
+  nav ul{list-style:none; display:flex; gap:34px; font-size:14px; color:var(--ink-soft);}
+  nav ul li{position:relative; cursor:pointer;}
+  nav ul li::after{
+    content:""; position:absolute; left:0; bottom:-6px; width:0; height:1px;
+    background:var(--gold); transition:width .3s ease;
+  }
+  nav ul li:hover::after{width:100%;}
+  .btn-rdv{
+    background:var(--ink); color:#fff; padding:11px 22px; border-radius:100px;
+    font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:8px;
+    transition: transform .25s ease, background .25s ease;
+  }
+  .btn-rdv:hover{background:var(--gold); transform:translateY(-1px);}
+
+  /* ---- HERO ---- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    padding: 0 6vw; overflow:hidden;
+  }
+  .blueprint{
+    position:absolute; inset:0; opacity:.35; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, black 10%, transparent 75%);
+  }
+  .hero-content{position:relative; max-width:900px; padding-top:80px;}
+  .hero h1{
+    font-size: clamp(42px, 6vw, 78px); font-weight:450; line-height:1.05; color:var(--ink);
+    letter-spacing:-.01em;
+    opacity:0; transform: translateY(24px);
+    animation: rise .9s cubic-bezier(.19,1,.22,1) .15s forwards;
+  }
+  .hero h1 em{font-style:italic; color:var(--gold);}
+  .hero p.lead{
+    margin-top:26px; max-width:560px; font-size:18px; line-height:1.6; color:var(--text-muted);
+    opacity:0; transform: translateY(20px);
+    animation: rise .9s cubic-bezier(.19,1,.22,1) .35s forwards;
+  }
+  .hero-cta{
+    margin-top:40px; display:flex; gap:16px; align-items:center;
+    opacity:0; transform: translateY(20px);
+    animation: rise .9s cubic-bezier(.19,1,.22,1) .55s forwards;
+  }
+  .btn-primary{
+    background:var(--ink); color:#fff; padding:16px 30px; border-radius:100px;
+    font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:10px;
+    transition: transform .3s ease, background .3s ease;
+  }
+  .btn-primary:hover{background:var(--gold); transform:translateY(-2px);}
+  .btn-ghost{
+    padding:16px 26px; font-size:14px; color:var(--ink-soft); border-bottom:1px solid var(--ink-soft);
+    transition: color .3s ease, border-color .3s ease;
+  }
+  .btn-ghost:hover{color:var(--gold); border-color:var(--gold);}
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+
+  .hero-line{
+    position:absolute; left:6vw; bottom:64px; width:0; height:1px; background:var(--gold-soft);
+    animation: draw 1.4s ease .9s forwards;
+  }
+  @keyframes draw{ to{ width:220px; } }
+
+  .scroll-cue{
+    position:absolute; bottom:36px; right:6vw; font-size:12px; letter-spacing:.1em; color:var(--text-muted);
+    display:flex; flex-direction:column; align-items:center; gap:8px; text-transform:uppercase;
+  }
+  .scroll-cue .dot{width:1px; height:34px; background:var(--text-muted); position:relative; overflow:hidden;}
+  .scroll-cue .dot::after{
+    content:""; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--gold);
+    animation: scrolldot 1.8s ease-in-out infinite;
+  }
+  @keyframes scrolldot{ 50%{ top:100%; } 100%{ top:100%; } }
+
+  /* ---- SECTION shared ---- */
+  section{padding: 120px 6vw;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head h2{font-size: clamp(28px,3.4vw,42px); font-weight:450; color:var(--ink); margin-top:10px; line-height:1.15;}
+
+  .reveal{opacity:0; transform:translateY(28px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---- SIMULATEURS ---- */
+  .grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:22px;
+  }
+  .card{
+    background: var(--cream-card); border:1px solid var(--line); border-radius:18px;
+    padding:34px; min-height:290px; display:flex; flex-direction:column;
+    transition: transform .4s cubic-bezier(.19,1,.22,1), box-shadow .4s ease, border-color .4s ease;
+    position:relative; overflow:hidden;
+  }
+  .card::before{
+    content:""; position:absolute; top:0; left:0; width:100%; height:3px;
+    background:linear-gradient(90deg, var(--gold), var(--gold-soft)); transform:scaleX(0); transform-origin:left;
+    transition: transform .5s ease;
+  }
+  .card:hover{transform:translateY(-6px); box-shadow:0 24px 40px -20px rgba(22,33,46,.18); border-color:var(--gold-soft);}
+  .card:hover::before{transform:scaleX(1);}
+  .card .tag{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); font-weight:600;}
+  .card h3{font-size:28px; margin-top:10px; color:var(--ink); font-weight:450;}
+  .card p{margin-top:14px; font-size:14.5px; color:var(--text-muted); line-height:1.55; flex-grow:1;}
+  .pills{display:flex; gap:8px; flex-wrap:wrap; margin-top:18px;}
+  .pill{font-size:12px; padding:6px 12px; border-radius:100px; background:#fff; border:1px solid var(--line); color:var(--text-muted);}
+  .card-cta{
+    margin-top:22px; padding:13px 20px; border-radius:100px; font-size:13px; font-weight:500;
+    display:inline-flex; align-items:center; gap:8px; width:fit-content;
+  }
+  .card-cta.active{background:var(--ink); color:#fff; transition:background .3s ease, gap .3s ease;}
+  .card-cta.active:hover{background:var(--gold); gap:12px;}
+  .card-cta.soon{background:transparent; color:var(--text-muted); border:1px solid var(--line);}
+
+  /* ---- RESSOURCES ---- */
+  .res-strip{
+    display:grid; grid-template-columns: 1fr 1fr; gap:40px; align-items:center;
+    background:var(--ink); color:#EDE7D9; border-radius:24px; padding:60px; position:relative; overflow:hidden;
+  }
+  .res-strip::after{
+    content:""; position:absolute; right:-60px; top:-60px; width:260px; height:260px; border-radius:50%;
+    border:1px solid rgba(201,169,104,.35);
+  }
+  .res-strip .eyebrow{color:var(--gold-soft);}
+  .res-strip h2{color:#fff; font-size:32px; font-weight:450; margin-top:12px;}
+  .res-strip p{margin-top:16px; color:#C7C1B0; font-size:15px; line-height:1.6;}
+  .res-list{display:flex; flex-direction:column; gap:0;}
+  .res-item{
+    padding:20px 0; border-bottom:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; align-items:center;
+    transition: padding-left .3s ease;
+  }
+  .res-item:hover{padding-left:10px;}
+  .res-item span.n{color:var(--gold-soft); font-size:13px; font-family:'Fraunces',serif;}
+  .res-item p{color:#EDE7D9; font-size:15px; margin:0;}
+
+  /* ---- FOOTER CTA ---- */
+  .final-cta{text-align:center; padding-bottom:140px;}
+  .final-cta h2{font-size:clamp(30px,4vw,52px); font-weight:450; color:var(--ink); max-width:720px; margin:0 auto 30px;}
+  footer{
+    border-top:1px solid var(--line); padding:40px 6vw; display:flex; justify-content:space-between;
+    font-size:13px; color:var(--text-muted);
+  }
+
+  @media (max-width:900px){
+    nav ul{display:none;}
+    .grid{grid-template-columns:1fr;}
+    .res-strip{grid-template-columns:1fr; padding:36px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Brice Poitau <span>Conseils</span></div>
+  <nav><ul>
+    <li>Accueil</li>
+    <li>Simulateurs</li>
+    <li>Ressources</li>
+    <li>À propos</li>
+  </ul></nav>
+  <a class="btn-rdv" href="#rdv">Prendre RDV →</a>
+</header>
+
+<section class="hero">
+  <div class="blueprint"></div>
+  <div class="hero-content">
+    <p class="eyebrow" style="opacity:0; animation: rise .8s ease forwards;">Ingénieur patrimonial</p>
+    <h1>Structurer <em>votre</em><br>liberté financière</h1>
+    <p class="lead">Un accompagnement patrimonial rigoureux — épargne, immobilier, retraite et transmission — pensé comme une architecture sur-mesure, avec des outils de simulation clairs pour éclairer chaque décision.</p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="#rdv">Prendre rendez-vous →</a>
+      <a class="btn-ghost" href="#simulateurs">Découvrir les simulateurs</a>
+    </div>
+  </div>
+  <div class="hero-line"></div>
+  <div class="scroll-cue"><span>Scroll</span><div class="dot"></div></div>
+</section>
+
+<section id="simulateurs">
+  <div class="section-head reveal">
+    <p class="eyebrow">Outils de simulation</p>
+    <h2>Visualisez l'impact de chaque stratégie avant de vous engager</h2>
+  </div>
+  <div class="grid">
+
+    <div class="card reveal">
+      <span class="tag">Épargne &amp; capitalisation</span>
+      <h3>Assurance Vie</h3>
+      <p>Projeter l'encours, les versements et la puissance des intérêts composés dans le temps.</p>
+      <div class="pills"><span class="pill">Projection</span><span class="pill">Intérêts composés</span></div>
+      <a class="card-cta active">Ouvrir le simulateur →</a>
+    </div>
+
+    <div class="card reveal">
+      <span class="tag">Immobilier &amp; revenus</span>
+      <h3>SCPI</h3>
+      <p>Estimer les revenus locatifs potentiels et le rendement net d'une stratégie SCPI.</p>
+      <a class="card-cta soon">En préparation</a>
+    </div>
+
+    <div class="card reveal">
+      <span class="tag">Retraite &amp; fiscalité</span>
+      <h3>PER</h3>
+      <p>Anticiper l'effort d'épargne nécessaire et l'économie d'impôt associée au Plan Épargne Retraite.</p>
+      <a class="card-cta soon">En préparation</a>
+    </div>
+
+    <div class="card reveal">
+      <span class="tag">Frais &amp; contrats</span>
+      <h3>Comparateur de contrats</h3>
+      <p>Comparer plusieurs contrats sur la base des frais réels et de leur impact sur la performance long terme.</p>
+      <a class="card-cta soon">En préparation</a>
+    </div>
+
+    <div class="card reveal">
+      <span class="tag">Immobilier &amp; arbitrage</span>
+      <h3>Acheter ou louer</h3>
+      <p>Arbitrer entre acquisition et location selon votre horizon et votre capacité d'épargne.</p>
+      <a class="card-cta soon">En préparation</a>
+    </div>
+
+    <div class="card reveal">
+      <span class="tag">SCPI &amp; crédit</span>
+      <h3>Une pierre deux coups</h3>
+      <p>Mesurer l'effet de levier du crédit sur un investissement SCPI à crédit.</p>
+      <a class="card-cta soon">En préparation</a>
+    </div>
+
+  </div>
+</section>
+
+<section id="ressources">
+  <div class="res-strip reveal">
+    <div>
+      <p class="eyebrow">Ressources</p>
+      <h2>Une éducation financière gratuite, sans jargon</h2>
+      <p>Des guides pédagogiques rédigés pour comprendre — pas pour vendre. Fiscalité, transmission, placements : de quoi prendre des décisions éclairées avant même votre premier rendez-vous.</p>
+      <a class="card-cta active" style="margin-top:26px; background:var(--gold-soft); color:var(--ink);">Explorer les ressources →</a>
+    </div>
+    <div class="res-list">
+      <div class="res-item"><span class="n">01</span><p>Nos partenaires &amp; habilitations</p></div>
+      <div class="res-item"><span class="n">02</span><p>Diplômes &amp; certifications</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="rdv">
+  <p class="eyebrow reveal">Prochaine étape</p>
+  <h2 class="reveal">Un premier échange, sans engagement, pour clarifier votre situation patrimoniale.</h2>
+  <a class="btn-primary reveal" href="#" style="display:inline-flex;">Prendre rendez-vous →</a>
+</section>
+
+<footer>
+  <span>© Brice Poitau Conseils</span>
+  <span>contact@bricepoitau-conseils.fr — 06 XX XX XX XX</span>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, {threshold:.15});
+  revealEls.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>

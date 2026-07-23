@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur Comparateur de Contrats</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161922;
+    --surface2: #1e2330;
+    --border: #2a3045;
+    --a-color: #4aaeff;
+    --a-light: #1a3a5c;
+    --b-color: #2ecc8a;
+    --b-light: #143d2e;
+    --ref-color: #888fa8;
+    --cross-color: #f5c842;
+    --gold: #f5c842;
+    --text: #e8ecf5;
+    --text-muted: #7a82a0;
+    --positive: #2ecc8a;
+    --negative: #ff5e6c;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 900px; height: 600px;
+    background: radial-gradient(ellipse, rgba(74,174,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* HEADER EDITABLE */
+  header { text-align: center; margin-bottom: 44px; }
+  header .eyebrow {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--a-color); margin-bottom: 12px;
+  }
+  .title-edit-wrap {
+    display: inline-flex; align-items: center; gap: 10px;
+    position: relative; margin-bottom: 6px;
+  }
+  .title-edit-wrap h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 3.5vw, 42px);
+    line-height: 1.15; color: var(--text);
+    border-bottom: 2px dashed transparent;
+    transition: border-color 0.2s;
+    cursor: text;
+    outline: none;
+    min-width: 100px;
+    padding: 2px 4px;
+  }
+  .title-edit-wrap h1:focus {
+    border-bottom-color: var(--a-color);
+  }
+  .title-edit-wrap h1 em { font-style: italic; color: var(--b-color); }
+  .edit-hint {
+    font-size: 11px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 4px;
+    opacity: 0.6;
+  }
+  .edit-hint svg { width: 13px; height: 13px; }
+  .title-second-line {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(14px, 2vw, 22px);
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    cursor: text;
+    outline: none;
+    border-bottom: 2px dashed transparent;
+    transition: border-color 0.2s;
+    padding: 2px 4px;
+    display: inline-block;
+  }
+  .title-second-line:focus { border-bottom-color: var(--b-color); }
+  header p { color: var(--text-muted); font-size: 14px; margin-top: 6px; }
+
+  /* COMMON BAR */
+  .common-bar {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 28px;
+    display: flex; gap: 32px; align-items: flex-start;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .common-bar label {
+    font-size: 12px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    display: block; margin-bottom: 8px;
+  }
+  .common-bar .field { flex: 1; min-width: 200px; }
+
+  /* HORIZON SLIDER */
+  .horizon-field { flex: 1.5; min-width: 280px; }
+  .horizon-row { display: flex; align-items: center; gap: 12px; }
+  .horizon-val {
+    font-size: 22px; font-weight: 700; color: var(--gold);
+    min-width: 70px; white-space: nowrap;
+  }
+  #horizonSlider {
+    -webkit-appearance: none; width: 100%; height: 6px;
+    background: var(--border); border-radius: 3px; outline: none;
+  }
+  #horizonSlider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--gold);
+    cursor: pointer; border: 2px solid var(--bg);
+    box-shadow: 0 0 8px rgba(245,200,66,0.4);
+  }
+  .horizon-ticks {
+    display: flex; justify-content: space-between;
+    padding: 0 2px; margin-top: 6px;
+  }
+  .horizon-ticks span {
+    font-size: 10px; color: var(--text-muted); cursor: pointer;
+  }
+  .horizon-ticks span:hover { color: var(--gold); }
+
+  /* CARDS */
+  .grid-top { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    position: relative; overflow: hidden;
+  }
+  .card.card-a { border-top: 3px solid var(--a-color); }
+  .card.card-b { border-top: 3px solid var(--b-color); }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+  .card-a .card-label { color: var(--a-color); }
+  .card-b .card-label { color: var(--b-color); }
+  .contract-name {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text);
+    font-family: 'DM Serif Display', serif; font-size: 15px;
+    padding: 6px 10px; width: 190px; outline: none; transition: border-color 0.2s;
+  }
+  .contract-name:focus { border-color: var(--a-color); }
+  .card-b .contract-name:focus { border-color: var(--b-color); }
+  .params-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field label {
+    display: block; font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .input-row { display: flex; align-items: center; gap: 8px; }
+  input[type="range"] {
+    -webkit-appearance: none; width: 100%; height: 4px;
+    background: var(--border); border-radius: 2px; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; cursor: pointer; border: 2px solid var(--bg);
+  }
+  .card-a input[type="range"]::-webkit-slider-thumb { background: var(--a-color); }
+  .card-b input[type="range"]::-webkit-slider-thumb { background: var(--b-color); }
+  .common-bar input[type="range"]::-webkit-slider-thumb { background: var(--gold); }
+  .val-display { font-size: 16px; font-weight: 600; min-width: 60px; text-align: right; }
+  .card-a .val-display { color: var(--a-color); }
+  .card-b .val-display { color: var(--b-color); }
+
+  /* RESULTS */
+  .results-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .result-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; text-align: center;
+  }
+  .result-card.winner {
+    background: linear-gradient(135deg, var(--b-light), var(--surface));
+    border-color: var(--b-color);
+  }
+  .result-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px; }
+  .result-value { font-family: 'DM Serif Display', serif; font-size: 28px; line-height: 1; margin-bottom: 4px; }
+  .result-value.a { color: var(--a-color); }
+  .result-value.b { color: var(--b-color); }
+  .result-value.diff-pos { color: var(--positive); }
+  .result-value.diff-neg { color: var(--negative); }
+  .result-sub { font-size: 12px; color: var(--text-muted); }
+
+  /* AMORT */
+  .amort-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .amort-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .amort-icon { font-size: 28px; line-height: 1; }
+  .amort-info { flex: 1; }
+  .amort-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+  .amort-value { font-weight: 700; font-size: 18px; }
+  .amort-a { color: var(--a-color); }
+  .amort-b { color: var(--b-color); }
+
+  /* CROSSING BANNER */
+  .crossing-banner {
+    background: linear-gradient(135deg, rgba(245,200,66,0.08), var(--surface));
+    border: 1px solid rgba(245,200,66,0.3);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 24px;
+  }
+  .crossing-banner .cross-icon { font-size: 24px; }
+  .crossing-banner .cross-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .crossing-banner .cross-text strong { color: var(--gold); }
+  .crossing-banner.hidden { display: none; }
+
+  /* CHART */
+  .chart-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+  }
+  .chart-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+  }
+  .chart-title { font-family: 'DM Serif Display', serif; font-size: 18px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-cross { width: 10px; height: 10px; border-radius: 2px; transform: rotate(45deg); }
+
+  /* TABLE */
+  .table-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    padding: 14px 16px; text-align: right;
+    background: var(--surface2); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); font-weight: 600;
+  }
+  thead th:first-child { text-align: left; }
+  tbody tr { border-top: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody tr.highlight { background: rgba(46,204,138,0.05); }
+  tbody tr.cross-row { background: rgba(245,200,66,0.06); border-top-color: rgba(245,200,66,0.3); }
+  td { padding: 12px 16px; text-align: right; }
+  td:first-child { text-align: left; font-weight: 500; }
+  .td-a { color: var(--a-color); font-weight: 600; }
+  .td-b { color: var(--b-color); font-weight: 600; }
+  .td-pos { color: var(--positive); }
+  .td-neg { color: var(--negative); }
+  .th-a { color: var(--a-color) !important; }
+  .th-b { color: var(--b-color) !important; }
+
+  .footnote {
+    text-align: center; font-size: 11px; color: var(--text-muted);
+    margin-top: 20px; padding: 0 20px; line-height: 1.6;
+  }
+
+  @media (max-width: 700px) {
+    .grid-top, .results-row, .amort-row { grid-template-columns: 1fr; }
+    .common-bar { flex-direction: column; align-items: stretch; }
+    .params-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Simulateur Patrimonial</div>
+    <div class="title-edit-wrap">
+      <h1 contenteditable="true" id="mainTitle" spellcheck="false">Comparez vos <em id="titleEm">contrats</em></h1>
+    </div>
+    <div>
+      <span class="title-second-line" contenteditable="true" id="subTitle" spellcheck="false">sur le long terme</span>
+    </div>
+    <p>Droits d'entrée, rendement, durée : visualisez l'impact de chaque paramètre en temps réel
+      <span style="color:var(--text-muted);font-size:11px;margin-left:6px">✏️ Titres modifiables</span>
+    </p>
+  </header>
+
+  <!-- Common params -->
+  <div class="common-bar">
+    <div class="field">
+      <label>💰 Versement initial</label>
+      <div class="input-row">
+        <input type="range" id="capital" min="1000" max="500000" step="1000" value="100000" oninput="update()">
+        <span id="capitalVal" class="val-display" style="color:var(--gold);min-width:90px">100 000 €</span>
+      </div>
+    </div>
+    <div class="field horizon-field">
+      <label>📅 Horizon de placement</label>
+      <div class="horizon-row">
+        <input type="range" id="horizonSlider" min="1" max="30" step="1" value="10" oninput="update()">
+        <span id="horizonVal" class="horizon-val">10 ans</span>
+      </div>
+      <div class="horizon-ticks">
+        <span onclick="setHorizonVal(1)">1</span>
+        <span onclick="setHorizonVal(5)">5</span>
+        <span onclick="setHorizonVal(10)">10</span>
+        <span onclick="setHorizonVal(15)">15</span>
+        <span onclick="setHorizonVal(20)">20</span>
+        <span onclick="setHorizonVal(25)">25</span>
+        <span onclick="setHorizonVal(30)">30</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract cards -->
+  <div class="grid-top">
+    <div class="card card-a">
+      <div class="card-header">
+        <span class="card-label">Contrat A</span>
+        <input class="contract-name" id="nameA" type="text" value="Contrat Haut de Gamme" oninput="update()">
+      </div>
+      <div class="params-grid">
+        <div class="field">
+          <label>Droits d'entrée</label>
+          <div class="input-row">
+            <input type="range" id="feesA" min="0" max="10" step="0.1" value="4.8" oninput="update()">
+            <span id="feesAVal" class="val-display">4,8 %</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Rendement annuel</label>
+          <div class="input-row">
+            <input type="range" id="perfA" min="0" max="12" step="0.1" value="2" oninput="update()">
+            <span id="perfAVal" class="val-display">2,0 %</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Frais de gestion / an</label>
+          <div class="input-row">
+            <input type="range" id="mgmtA" min="0" max="3" step="0.05" value="1" oninput="update()">
+            <span id="mgmtAVal" class="val-display">1,0 %</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Rendement net / an</label>
+          <div class="input-row" style="justify-content:flex-end">
+            <span id="netAVal" style="font-size:20px;font-weight:700;color:var(--a-color)">3,4 %</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-b">
+      <div class="card-header">
+        <span class="card-label">Contrat B</span>
+        <input class="contract-name" id="nameB" type="text" value="Contrat Classique" oninput="update()" style="border-color:var(--b-light)">
+      </div>
+      <div class="params-grid">
+        <div class="field">
+          <label>Droits d'entrée</label>
+          <div class="input-row">
+            <input type="range" id="feesB" min="0" max="10" step="0.1" value="0" oninput="update()">
+            <span id="feesBVal" class="val-display" style="color:var(--b-color)">0,0 %</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Rendement annuel</label>
+          <div class="input-row">
+            <input type="range" id="perfB" min="0" max="12" step="0.1" value="2" oninput="update()">
+            <span id="perfBVal" class="val-display" style="color:var(--b-color)">2,0 %</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Frais de gestion / an</label>
+          <div class="input-row">
+            <input type="range" id="mgmtB" min="0" max="3" step="0.05" value="1" oninput="update()">
+            <span id="mgmtBVal" class="val-display" style="color:var(--b-color)">1,0 %</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Rendement net / an</label>
+          <div class="input-row" style="justify-content:flex-end">
+            <span id="netBVal" style="font-size:20px;font-weight:700;color:var(--b-color)">2,7 %</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amortissement -->
+  <div class="amort-row">
+    <div class="amort-card">
+      <div class="amort-icon">⏳</div>
+      <div class="amort-info">
+        <div class="amort-title">Point d'amortissement — <span id="labelAmortA" style="color:var(--a-color)"></span></div>
+        <div id="amortA" class="amort-value amort-a">—</div>
+      </div>
+    </div>
+    <div class="amort-card">
+      <div class="amort-icon">⏳</div>
+      <div class="amort-info">
+        <div class="amort-title">Point d'amortissement — <span id="labelAmortB" style="color:var(--b-color)"></span></div>
+        <div id="amortB" class="amort-value amort-b">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crossing banner -->
+  <div class="crossing-banner hidden" id="crossingBanner">
+    <div class="cross-icon">✕</div>
+    <div class="cross-text" id="crossingText">—</div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-row">
+    <div class="result-card">
+      <div class="result-label" id="labelResA">Contrat A</div>
+      <div class="result-value a" id="resA">—</div>
+      <div class="result-sub" id="resAGain">— de gain</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label" id="labelResB">Contrat B</div>
+      <div class="result-value b" id="resB">—</div>
+      <div class="result-sub" id="resBGain">— de gain</div>
+    </div>
+    <div class="result-card winner" id="diffCard">
+      <div class="result-label">Écart à l'échéance</div>
+      <div class="result-value diff-pos" id="resDiff">—</div>
+      <div class="result-sub" id="resDiffLabel">—</div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Évolution de la valeur du contrat</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--a-color)"></div><span id="legA">Contrat A</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--b-color)"></div><span id="legB">Contrat B</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ref-color)"></div><span>Capital initial</span></div>
+        <div class="legend-item" id="legCrossWrap" style="display:none"><div class="legend-cross" style="background:var(--cross-color)"></div><span>Point de croisement</span></div>
+      </div>
+    </div>
+    <canvas id="chart" height="300"></canvas>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Année</th>
+          <th class="th-a" id="thA">Contrat A</th>
+          <th class="th-b" id="thB">Contrat B</th>
+          <th>Écart (B − A)</th>
+          <th>Meilleur</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <p class="footnote">Hypothèses : rendements annuels nets de frais de gestion. Les performances passées ne préjugent pas des performances futures. Simulation à titre indicatif, hors fiscalité.</p>
+</div>
+
+<script>
+let chartInstance = null;
+
+function setHorizonVal(v) {
+  document.getElementById('horizonSlider').value = v;
+  update();
+}
+
+function fmt(n) {
+  return n.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €';
+}
+function fmtPct(n) {
+  return n.toFixed(1).replace('.', ',') + ' %';
+}
+function computeAmortissement(capital, fees, netPerf) {
+  const invested = capital * (1 - fees / 100);
+  if (fees === 0) return 0;
+  if (netPerf <= 0) return null;
+  return Math.log(capital / invested) / Math.log(1 + netPerf / 100);
+}
+
+// Find exact crossing year (fractional) between two series
+function findCrossing(investedA, investedB, netA, netB) {
+  // vA(t) = vB(t)  =>  investedA * (1+netA)^t = investedB * (1+netB)^t
+  // => (investedA/investedB) = ((1+netB)/(1+neta))^t
+  // => t = log(investedA/investedB) / log((1+netB)/(1+netA))
+  const rA = 1 + netA / 100;
+  const rB = 1 + netB / 100;
+  if (rA === rB) return null; // parallel lines
+  const logRatio = Math.log(rB / rA);
+  if (logRatio === 0) return null;
+  const t = Math.log(investedA / investedB) / logRatio;
+  return t;
+}
+
+function update() {
+  const capital = +document.getElementById('capital').value;
+  const horizon = +document.getElementById('horizonSlider').value;
+  const feesA = +document.getElementById('feesA').value;
+  const perfA = +document.getElementById('perfA').value;
+  const mgmtA = +document.getElementById('mgmtA').value;
+  const feesB = +document.getElementById('feesB').value;
+  const perfB = +document.getElementById('perfB').value;
+  const mgmtB = +document.getElementById('mgmtB').value;
+  const nameA = document.getElementById('nameA').value || 'Contrat A';
+  const nameB = document.getElementById('nameB').value || 'Contrat B';
+
+  const netA = perfA - mgmtA;
+  const netB = perfB - mgmtB;
+
+  // Horizon display
+  document.getElementById('horizonVal').textContent = horizon + ' an' + (horizon > 1 ? 's' : '');
+
+  // Update labels
+  document.getElementById('capitalVal').textContent = fmt(capital);
+  document.getElementById('feesAVal').textContent = fmtPct(feesA);
+  document.getElementById('perfAVal').textContent = fmtPct(perfA);
+  document.getElementById('mgmtAVal').textContent = fmtPct(mgmtA);
+  document.getElementById('netAVal').textContent = fmtPct(netA);
+  document.getElementById('feesBVal').textContent = fmtPct(feesB);
+  document.getElementById('perfBVal').textContent = fmtPct(perfB);
+  document.getElementById('mgmtBVal').textContent = fmtPct(mgmtB);
+  document.getElementById('netBVal').textContent = fmtPct(netB);
+
+  document.getElementById('legA').textContent = nameA;
+  document.getElementById('legB').textContent = nameB;
+  document.getElementById('labelResA').textContent = nameA + ' après ' + horizon + ' ans';
+  document.getElementById('labelResB').textContent = nameB + ' après ' + horizon + ' ans';
+  document.getElementById('thA').textContent = nameA;
+  document.getElementById('thB').textContent = nameB;
+  document.getElementById('labelAmortA').textContent = nameA;
+  document.getElementById('labelAmortB').textContent = nameB;
+
+  const investedA = capital * (1 - feesA / 100);
+  const investedB = capital * (1 - feesB / 100);
+
+  // Amortissement
+  const amortA = computeAmortissement(capital, feesA, netA);
+  const amortB = computeAmortissement(capital, feesB, netB);
+  document.getElementById('amortA').textContent =
+    amortA === null ? 'Non récupérable' :
+    amortA === 0 ? 'Immédiat (0 frais)' :
+    amortA.toFixed(1).replace('.', ',') + ' an' + (amortA >= 2 ? 's' : '');
+  document.getElementById('amortB').textContent =
+    amortB === null ? 'Non récupérable' :
+    amortB === 0 ? 'Immédiat (0 frais)' :
+    amortB.toFixed(1).replace('.', ',') + ' an' + (amortB >= 2 ? 's' : '');
+
+  // Series (with sub-year resolution for crossing)
+  const steps = horizon * 4; // quarterly precision
+  const tValues = Array.from({ length: steps + 1 }, (_, i) => i * horizon / steps);
+  const seriesA_fine = tValues.map(t => investedA * Math.pow(1 + netA / 100, t));
+  const seriesB_fine = tValues.map(t => investedB * Math.pow(1 + netB / 100, t));
+
+  // Annual series for chart
+  const years = Array.from({ length: horizon + 1 }, (_, i) => i);
+  const seriesA = years.map(y => investedA * Math.pow(1 + netA / 100, y));
+  const seriesB = years.map(y => investedB * Math.pow(1 + netB / 100, y));
+  const seriesRef = years.map(() => capital);
+
+  // Crossing point
+  const crossT = findCrossing(investedA, investedB, netA, netB);
+  const hasCrossing = crossT !== null && crossT > 0 && crossT <= horizon;
+  const crossVal = hasCrossing ? investedA * Math.pow(1 + netA / 100, crossT) : null;
+
+  // Banner
+  const banner = document.getElementById('crossingBanner');
+  const legCross = document.getElementById('legCrossWrap');
+  if (hasCrossing) {
+    banner.classList.remove('hidden');
+    legCross.style.display = 'flex';
+    const crossYearDisp = crossT.toFixed(1).replace('.', ',');
+    const crossValDisp = fmt(crossVal);
+    // Who overtakes whom?
+    const vA_before = investedA * Math.pow(1 + netA / 100, crossT - 0.01);
+    const vB_before = investedB * Math.pow(1 + netB / 100, crossT - 0.01);
+    let who, whom;
+    if (vB_before < vA_before) { who = nameB; whom = nameA; }
+    else { who = nameA; whom = nameB; }
+    document.getElementById('crossingText').innerHTML =
+      `<strong>✕ Croisement à ${crossYearDisp} ans</strong> — ${who} dépasse ${whom} à hauteur de <strong>${crossValDisp}</strong>. Au-delà de ce point, ${who} est systématiquement plus performant.`;
+  } else {
+    banner.classList.add('hidden');
+    legCross.style.display = 'none';
+  }
+
+  // Build crossing point dataset
+  const crossDataset = hasCrossing ? [{
+    label: 'Croisement',
+    data: years.map(y => {
+      const dist = Math.abs(y - crossT);
+      return dist < 0.5 ? crossVal : null;
+    }),
+    backgroundColor: '#f5c842',
+    borderColor: '#f5c842',
+    pointRadius: years.map(y => {
+      const closest = years.reduce((best, cy) => Math.abs(cy - crossT) < Math.abs(best - crossT) ? cy : best, years[0]);
+      return y === closest ? 10 : 0;
+    }),
+    pointHoverRadius: 12,
+    pointStyle: 'crossRot',
+    showLine: false,
+    type: 'scatter',
+  }] : [];
+
+  // Annotation line at crossing
+  const crossLineDataset = hasCrossing ? [{
+    label: '_crossline',
+    data: years.map(y => {
+      // draw a tiny vertical line — use a very narrow span
+      const closestIdx = Math.round(crossT);
+      return null; // we'll use annotation plugin workaround via extra point
+    }),
+    borderColor: 'rgba(245,200,66,0)',
+    pointRadius: 0,
+    showLine: false,
+  }] : [];
+
+  // Rebuild chart
+  const ctx = document.getElementById('chart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  // Custom plugin: draw vertical dashed line + label at crossing
+  const crossingLinePlugin = {
+    id: 'crossingLine',
+    afterDraw(chart) {
+      if (!hasCrossing) return;
+      const { ctx, chartArea, scales } = chart;
+      const xScale = scales.x;
+      const yScale = scales.y;
+      // Get pixel position of crossing
+      const xPx = xScale.getPixelForValue(crossT);
+      const yPx = yScale.getPixelForValue(crossVal);
+      // Vertical dashed line
+      ctx.save();
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = 'rgba(245,200,66,0.55)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(xPx, chartArea.top);
+      ctx.lineTo(xPx, chartArea.bottom);
+      ctx.stroke();
+      // Draw diamond marker
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#f5c842';
+      ctx.strokeStyle = '#0d0f14';
+      ctx.lineWidth = 2;
+      const s = 8;
+      ctx.beginPath();
+      ctx.moveTo(xPx, yPx - s);
+      ctx.lineTo(xPx + s, yPx);
+      ctx.lineTo(xPx, yPx + s);
+      ctx.lineTo(xPx - s, yPx);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      // Label box
+      const crossYearLabel = crossT.toFixed(1).replace('.', ',') + ' ans';
+      const valLabel = fmt(crossVal);
+      ctx.font = '600 11px DM Sans, sans-serif';
+      const tw1 = ctx.measureText(crossYearLabel).width;
+      const tw2 = ctx.measureText(valLabel).width;
+      const bw = Math.max(tw1, tw2) + 16;
+      const bh = 36;
+      let bx = xPx + 12;
+      let by = yPx - 22;
+      // Keep within chart area
+      if (bx + bw > chartArea.right) bx = xPx - bw - 12;
+      if (by < chartArea.top) by = chartArea.top + 4;
+      // Box
+      ctx.fillStyle = 'rgba(22,25,34,0.95)';
+      ctx.strokeStyle = 'rgba(245,200,66,0.6)';
+      ctx.lineWidth = 1;
+      roundRect(ctx, bx, by, bw, bh, 5);
+      ctx.fill(); ctx.stroke();
+      // Text
+      ctx.fillStyle = '#f5c842';
+      ctx.fillText(crossYearLabel, bx + 8, by + 13);
+      ctx.fillStyle = '#e8ecf5';
+      ctx.fillText(valLabel, bx + 8, by + 27);
+      ctx.restore();
+    }
+  };
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    plugins: [crossingLinePlugin],
+    data: {
+      labels: years.map(y => y === 0 ? 'Départ' : 'An ' + y),
+      datasets: [
+        {
+          label: nameA,
+          data: seriesA,
+          borderColor: '#4aaeff',
+          backgroundColor: 'rgba(74,174,255,0.06)',
+          borderWidth: 2.5,
+          pointRadius: years.map(y => y === horizon ? 5 : 2),
+          pointHoverRadius: 7,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: nameB,
+          data: seriesB,
+          borderColor: '#2ecc8a',
+          backgroundColor: 'rgba(46,204,138,0.06)',
+          borderWidth: 2.5,
+          pointRadius: years.map(y => y === horizon ? 5 : 2),
+          pointHoverRadius: 7,
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'Capital initial',
+          data: seriesRef,
+          borderColor: '#888fa8',
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#161922',
+          borderColor: '#2a3045',
+          borderWidth: 1,
+          titleColor: '#e8ecf5',
+          bodyColor: '#7a82a0',
+          padding: 12,
+          filter: item => item.dataset.label !== '_crossline',
+          callbacks: {
+            label: ctx => ' ' + ctx.dataset.label + ' : ' + ctx.raw.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €'
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#7a82a0', font: { size: 11 }, maxTicksLimit: 15 },
+          grid: { color: '#2a3045' }
+        },
+        y: {
+          ticks: {
+            color: '#7a82a0', font: { size: 11 },
+            callback: v => v.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €'
+          },
+          grid: { color: '#2a3045' }
+        }
+      }
+    }
+  });
+
+  // Final values
+  const finalA = seriesA[horizon];
+  const finalB = seriesB[horizon];
+  const gainA = finalA - capital;
+  const gainB = finalB - capital;
+  const diff = finalB - finalA;
+
+  document.getElementById('resA').textContent = fmt(finalA);
+  document.getElementById('resB').textContent = fmt(finalB);
+  document.getElementById('resAGain').textContent = (gainA >= 0 ? '+' : '') + fmt(gainA) + ' vs initial';
+  document.getElementById('resBGain').textContent = (gainB >= 0 ? '+' : '') + fmt(gainB) + ' vs initial';
+
+  const diffEl = document.getElementById('resDiff');
+  const diffCard = document.getElementById('diffCard');
+  const diffLabel = document.getElementById('resDiffLabel');
+  diffEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff);
+  if (diff > 0) {
+    diffEl.className = 'result-value diff-pos';
+    diffLabel.textContent = nameB + ' est meilleur';
+    diffCard.style.background = 'linear-gradient(135deg, var(--b-light), var(--surface))';
+    diffCard.style.borderColor = 'var(--b-color)';
+  } else if (diff < 0) {
+    diffEl.className = 'result-value diff-neg';
+    diffLabel.textContent = nameA + ' est meilleur';
+    diffCard.style.background = 'linear-gradient(135deg, var(--a-light), var(--surface))';
+    diffCard.style.borderColor = 'var(--a-color)';
+  } else {
+    diffEl.className = 'result-value';
+    diffLabel.textContent = 'Résultats identiques';
+    diffCard.style.background = '';
+    diffCard.style.borderColor = '';
+  }
+
+  // Table
+  const allMilestones = [1,2,3,5,7,10,12,15,20,25,30].filter(y => y <= horizon && y > 0);
+  if (!allMilestones.includes(horizon)) allMilestones.push(horizon);
+  allMilestones.sort((a, b) => a - b);
+
+  // Find crossing year (integer) for table highlight
+  let crossYearInt = null;
+  if (hasCrossing) {
+    crossYearInt = Math.round(crossT);
+    if (!allMilestones.includes(crossYearInt) && crossYearInt > 0 && crossYearInt <= horizon) {
+      allMilestones.push(crossYearInt);
+      allMilestones.sort((a, b) => a - b);
+    }
+  }
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  allMilestones.forEach(y => {
+    const vA = investedA * Math.pow(1 + netA / 100, y);
+    const vB = investedB * Math.pow(1 + netB / 100, y);
+    const d = vB - vA;
+    const better = Math.abs(d) < 50 ? '≈ Égalité' : d > 0 ? nameB : nameA;
+    const isLast = y === horizon;
+    const isCross = crossYearInt !== null && y === crossYearInt;
+    const tr = document.createElement('tr');
+    if (isLast) tr.classList.add('highlight');
+    if (isCross && !isLast) tr.classList.add('cross-row');
+    const yearLabel = isLast
+      ? `<strong>Après ${y} ans ⭐</strong>`
+      : isCross
+        ? `<span style="color:var(--gold)">✕ Croisement (~an ${y})</span>`
+        : `Après ${y} an${y > 1 ? 's' : ''}`;
+    tr.innerHTML = `
+      <td>${yearLabel}</td>
+      <td class="td-a">${fmt(vA)}</td>
+      <td class="td-b">${fmt(vB)}</td>
+      <td class="${d >= 0 ? 'td-pos' : 'td-neg'}">${d >= 0 ? '+' : ''}${fmt(d)}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${better}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+update();
+</script>
+</body>
+</html>

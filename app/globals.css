@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #f4efe3;
+  --cream-card: #fbf8f1;
+  --ink: #16212e;
+  --ink-soft: #2c3644;
+  --gold: #a9843f;
+  --gold-soft: #c9a968;
+  --line: #e3dac5;
+  --text: #33312b;
+  --text-muted: #75705f;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-cream-card: var(--cream-card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --font-serif: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.serif {
+  font-family: var(--font-fraunces), serif;
+}
+
+a {
+  color: inherit;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Scroll reveal, driven by RevealOnScroll (data attribute toggled via IntersectionObserver) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-blueprint {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, black 10%, transparent 75%);
+}
+
+.scroll-cue-dot {
+  width: 1px;
+  height: 34px;
+  background: var(--text-muted);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-cue-dot::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gold);
+  animation: scrolldot 1.8s ease-in-out infinite;
+}
+@keyframes scrolldot {
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-dot::after {
+    animation: none;
+    top: 0;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "brice-poitau-dev",
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["-c", "PATH=\"$HOME/.local/node/bin:$PATH\" npm run dev"],
+      "port": 3000
+    }
+  ]
+}

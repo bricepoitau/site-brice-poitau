@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur SCPI — Une pierre, deux coups</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e2e0d8;--border2:#c8c5bb;
+  --text:#1a1916;--muted:#6b6960;--faint:#9a9890;
+  --blue:#1a5fa8;--blue-bg:#eaf1fb;
+  --green:#156b42;--green-bg:#e6f4ed;
+  --red:#b83030;--red-bg:#fbeaea;
+  --amber:#8a5800;--amber-bg:#fdf3dc;
+  --radius:6px;--font:system-ui,'Segoe UI',sans-serif;--fn:'Courier New',monospace
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+.page{max-width:1300px;margin:0 auto;padding:32px 24px 64px}
+
+.header{margin-bottom:24px}
+.header h1{font-size:22px;font-weight:600;letter-spacing:-.3px}
+.header p{font-size:13px;color:var(--muted);margin-top:4px}
+.badge{display:inline-block;margin-top:8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;background:var(--blue-bg);color:var(--blue);border-radius:99px;border:1px solid #b3cff0}
+
+.layout{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
+
+/* Controls */
+.controls{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;position:sticky;top:24px}
+.ctrl-section{margin-bottom:18px}
+.ctrl-section:last-child{margin-bottom:0}
+.ctrl-title{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.ctrl-row{margin-bottom:9px}
+.ctrl-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:3px}
+.ctrl-val{font-weight:700;color:var(--text);font-size:12px}
+input[type=range]{width:100%;height:4px;cursor:pointer;accent-color:var(--blue)}
+input[type=range]:disabled{opacity:.35;cursor:default}
+.note{background:var(--amber-bg);border:1px solid #e8cb80;border-radius:var(--radius);padding:9px 11px;font-size:11px;color:var(--amber);line-height:1.6;margin-top:12px}
+.note strong{font-weight:700}
+
+.right{display:flex;flex-direction:column;gap:18px}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.kpi-label{font-size:11px;color:var(--faint);margin-bottom:4px;line-height:1.3}
+.kpi-value{font-size:19px;font-weight:700;font-family:var(--fn)}
+.kpi-value.pos{color:var(--green)}
+.kpi-value.neg{color:var(--red)}
+.kpi-value.blue{color:var(--blue)}
+.kpi-value.neu{color:var(--text)}
+
+/* Insight banner */
+.insight{border-radius:var(--radius);padding:14px 18px;font-size:13px;line-height:1.7;font-weight:400}
+.insight.ok  {background:var(--green-bg);color:var(--green);border:1px solid #a3d4bc}
+.insight.warn{background:var(--amber-bg);color:var(--amber);border:1px solid #e8c870}
+.insight.bad {background:var(--red-bg);color:var(--red);border:1px solid #e8b0b0}
+.insight strong{font-weight:700}
+
+/* Chart */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:10px}
+.chart-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--muted);margin-bottom:10px}
+.leg{display:flex;align-items:center;gap:5px}
+.leg-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Table */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.table-header{padding:14px 20px 10px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.table-header h3{font-size:14px;font-weight:600;white-space:nowrap}
+.table-scroller{overflow-x:auto;max-height:620px;overflow-y:auto}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+
+/* Group header */
+thead tr.grp th{
+  background:#ece9e1;text-align:center;padding:6px 14px;
+  font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--border2);
+  white-space:nowrap;position:sticky;top:0;z-index:3
+}
+/* Sub header */
+thead tr.sub th{
+  background:#f4f2ed;text-align:right;padding:8px 14px;
+  font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  color:var(--faint);border-bottom:2px solid var(--border2);
+  white-space:nowrap;position:sticky;top:29px;z-index:2
+}
+thead tr.sub th:first-child{text-align:center}
+
+tbody td{
+  text-align:right;padding:9px 14px;
+  color:var(--muted);border-bottom:1px solid var(--border);
+  font-family:var(--fn);white-space:nowrap;font-size:13px
+}
+tbody td:first-child{
+  text-align:center;font-family:var(--font);
+  font-weight:700;color:var(--text);font-size:12px
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#f9f8f5}
+
+/* Post-crédit */
+tbody tr.post td{background:#f0f7ef}
+tbody tr.post:hover td{background:#e5f2e4}
+tbody tr.post td:first-child{color:var(--green)}
+
+/* Separator */
+tr.sep td{
+  background:#e8f0fb;border-top:2px solid #b3cff0;border-bottom:2px solid #b3cff0;
+  font-size:12px;font-family:var(--font);color:var(--blue);font-weight:700;
+  text-align:center;padding:6px 14px;letter-spacing:.01em
+}
+
+/* Autofinancement row highlight */
+tbody tr.autofin td{background:#d4eddd!important}
+tbody tr.autofin td:first-child{color:var(--green)!important}
+
+/* Cell colors */
+.pos{color:var(--green)!important;font-weight:700}
+.neg{color:var(--red)!important;font-weight:600}
+.blu{color:var(--blue)!important;font-weight:700}
+.bl{border-left:2px solid var(--border2)!important}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .controls{position:static}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <h1>Simulateur SCPI — Une pierre, deux coups</h1>
+  <p>Financement à crédit + investissement au comptant (parc européen) : visualiser l'effort réel et le patrimoine constitué</p>
+  <span class="badge">Intérêts déductibles · Déficit foncier · SCPI européennes fiscalité source</span>
+</div>
+
+<div class="layout">
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="ctrl-section">
+    <div class="ctrl-title">Crédit SCPI</div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Montant emprunté</span><span class="ctrl-val" id="v-montant">150 000 €</span></div><input type="range" id="montant" min="50000" max="500000" step="5000" value="150000"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Durée du crédit</span><span class="ctrl-val" id="v-duree">25 ans</span></div><input type="range" id="duree" min="5" max="25" step="1" value="25"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>TAEG</span><span class="ctrl-val" id="v-taeg">5,5 %</span></div><input type="range" id="taeg" min="3.0" max="7.5" step="0.1" value="5.5"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Rendement SCPI financée</span><span class="ctrl-val" id="v-rend1">5,5 %</span></div><input type="range" id="rend1" min="3.0" max="8.0" step="0.1" value="5.5"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Revalorisation parts (crédit)</span><span class="ctrl-val" id="v-reval1">0,0 %</span></div><input type="range" id="reval1" min="0.0" max="4.0" step="0.1" value="0.0"></div>
+  </div>
+
+  <div class="ctrl-section">
+    <div class="ctrl-title">SCPI au comptant (parc européen)</div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Versement initial</span><span class="ctrl-val" id="v-initial">30 000 €</span></div><input type="range" id="initial" min="0" max="200000" step="1000" value="30000"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Versement mensuel programmé</span><span class="ctrl-val" id="v-prog">300 €</span></div><input type="range" id="prog" min="0" max="2000" step="50" value="300"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Rendement SCPI comptant</span><span class="ctrl-val" id="v-rend2">5,8 %</span></div><input type="range" id="rend2" min="3.0" max="8.0" step="0.1" value="5.8"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Revalorisation parts (comptant)</span><span class="ctrl-val" id="v-reval2">0,0 %</span></div><input type="range" id="reval2" min="0.0" max="4.0" step="0.1" value="0.0"></div>
+  </div>
+
+  <div class="ctrl-section">
+    <div class="ctrl-title">Fiscalité SCPI crédit (France)</div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Tranche marginale (TMI)</span><span class="ctrl-val" id="v-tmi">30 %</span></div><input type="range" id="tmi" min="11" max="45" step="1" value="30"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Prélèvements sociaux</span><span class="ctrl-val">17,2 % (fixe)</span></div><input type="range" disabled value="17.2"></div>
+    
+  </div>
+
+  <div class="ctrl-section">
+    <div class="ctrl-title">Fiscalité SCPI européenne (comptant)</div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Retenue à la source (pays)</span><span class="ctrl-val" id="v-rts">15,0 %</span></div><input type="range" id="rts" min="0" max="35" step="0.5" value="15"></div>
+    <div class="ctrl-row"><div class="ctrl-lbl"><span>Durée totale simulation</span><span class="ctrl-val" id="v-horizon">30 ans</span></div><input type="range" id="horizon" min="15" max="40" step="1" value="30"></div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="kpi-label">Mensualité crédit</div>
+      <div class="kpi-value neg" id="kpi-mens">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Rev. nets SCPI crédit / mois</div>
+      <div class="kpi-value pos" id="kpi-revcredit">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Rev. nets SCPI comptant / mois</div>
+      <div class="kpi-value pos" id="kpi-revcomptant">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Effort net an 1 — avec comptant</div>
+      <div class="kpi-value" id="kpi-ef1">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Autofinancement atteint</div>
+      <div class="kpi-value blue" id="kpi-autoyr">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Patrimoine net final</div>
+      <div class="kpi-value pos" id="kpi-patrim">—</div>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight ok" id="insight">—</div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <div class="chart-title">Effort mensuel net — évolution sur la durée de simulation</div>
+    <div class="chart-legend">
+      <span class="leg"><span class="leg-sq" style="background:#b83030"></span>Mensualité brute</span>
+      <span class="leg"><span class="leg-sq" style="background:#d4763a;opacity:.8"></span>Effort net sans comptant</span>
+      <span class="leg"><span class="leg-sq" style="background:#156b42"></span>Effort net avec comptant</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px">
+      <canvas id="chartFlux"></canvas>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>Synthèse client</h3>
+      <span style="font-size:11px;color:var(--faint)">Effort net = mensualité – revenus SCPI nets après fiscalité &nbsp;|&nbsp; Valeurs mensuelles en €</span>
+    </div>
+    <div class="table-scroller">
+      <table>
+        <thead>
+          <tr class="grp">
+            <th rowspan="2" style="vertical-align:bottom;text-align:center;border-right:2px solid var(--border2)">Année</th>
+            <th style="border-right:2px solid var(--border2)">Mensualité crédit</th>
+            <th colspan="2" style="border-right:2px solid var(--border2)">Effort net / Revenu net mensuel</th>
+            <th colspan="2">Patrimoine constitué</th>
+          </tr>
+          <tr class="sub">
+            <th style="border-right:2px solid var(--border2)" class="bl"></th>
+            <th class="bl">Sans comptant</th>
+            <th style="border-right:2px solid var(--border2)">Avec comptant</th>
+            <th class="bl">Brut</th>
+            <th>Net</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /right -->
+</div><!-- /layout -->
+</div><!-- /page -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+var chartFlux = null;
+
+function fmt(v, d) {
+  d = d === undefined ? 0 : d;
+  if (!isFinite(v) || isNaN(v)) return '—';
+  return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+}
+function e(v) { return fmt(v) + ' €'; }
+
+function getP() {
+  return {
+    montant:  +document.getElementById('montant').value,
+    duree:    +document.getElementById('duree').value,
+    taeg:     +document.getElementById('taeg').value / 100,
+    rend1:    +document.getElementById('rend1').value / 100,
+    reval1:   +document.getElementById('reval1').value / 100,
+    initial:  +document.getElementById('initial').value,
+    prog:     +document.getElementById('prog').value,
+    rend2:    +document.getElementById('rend2').value / 100,
+    reval2:   +document.getElementById('reval2').value / 100,
+    tmi:      +document.getElementById('tmi').value / 100,
+    rts:      +document.getElementById('rts').value / 100,
+    horizon:  +document.getElementById('horizon').value
+  };
+}
+
+function compute() {
+  var p = getP();
+  var ps = 0.172;
+  var taxCredit = p.tmi + ps;
+  var PLAFOND = 10750;
+
+  var r = p.taeg / 12;
+  var n = p.duree * 12;
+  var mens = r === 0 ? p.montant / n : p.montant * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
+
+  var rows = [];
+  var crd = p.montant;
+  var capComptant = p.initial;
+  var deficitReporte = 0;
+  var autofinYear = null; // first year effort avec comptant <= 0 during credit
+
+  for (var yr = 1; yr <= p.horizon; yr++) {
+    var inCredit = yr <= p.duree;
+
+    // Intérêts annuels réels
+    var interetsAnnuels = 0;
+    if (inCredit) {
+      for (var m = 0; m < 12; m++) {
+        var it = crd * r;
+        interetsAnnuels += it;
+        crd = Math.max(0, crd - (mens - it));
+      }
+    }
+
+    // Valeur parts crédit (revalorisation)
+    var valPartsCredit = p.montant * Math.pow(1 + p.reval1, yr);
+    var revFoncierBrut = valPartsCredit * p.rend1;
+
+    // Fiscalité SCPI crédit avec déductibilité intérêts
+    var base = revFoncierBrut - interetsAnnuels;
+    var impot = 0;
+    if (base < 0) {
+      var deficit = -base;
+      var ded = Math.min(deficit, PLAFOND);
+      deficitReporte += Math.max(0, deficit - PLAFOND);
+      impot = -(ded * p.tmi); // économie fiscale
+    } else {
+      var apresReport = Math.max(0, base - deficitReporte);
+      deficitReporte = Math.max(0, deficitReporte - base);
+      impot = apresReport * taxCredit;
+    }
+    var revCreditNetMens = (revFoncierBrut - impot) / 12;
+
+    // SCPI comptant
+    for (var m2 = 0; m2 < 12; m2++) {
+      capComptant = capComptant * (1 + p.reval2 / 12) + p.prog;
+    }
+    var revComptantNetMens = capComptant * p.rend2 * (1 - p.rts) / 12;
+
+    // Efforts
+    var mensAff = inCredit ? mens : 0;
+    var effortSans = inCredit ? mens - revCreditNetMens : -revCreditNetMens;
+    var effortAvec = inCredit ? mens - revCreditNetMens - revComptantNetMens : -(revCreditNetMens + revComptantNetMens);
+
+    // Autofinancement
+    if (inCredit && effortAvec <= 0 && autofinYear === null) {
+      autofinYear = yr;
+    }
+
+    // Patrimoine
+    var patrimBrut = valPartsCredit + capComptant;
+    var patrimNet  = patrimBrut - crd;
+
+    rows.push({
+      yr: yr, inCredit: inCredit,
+      mens: mensAff,
+      revCreditNetMens: revCreditNetMens,
+      revComptantNetMens: revComptantNetMens,
+      effortSans: effortSans,
+      effortAvec: effortAvec,
+      patrimBrut: patrimBrut,
+      patrimNet:  patrimNet,
+      crd: crd,
+      isAutofin: (autofinYear === yr)
+    });
+  }
+
+  // KPIs
+  var r1 = rows[0];
+  var rFin = rows[rows.length - 1];
+
+  document.getElementById('kpi-mens').textContent = e(mens) + '/mois';
+
+  // Revenus nets an 1
+  document.getElementById('kpi-revcredit').textContent = e(r1.revCreditNetMens) + '/mois';
+  document.getElementById('kpi-revcomptant').textContent = e(r1.revComptantNetMens) + '/mois';
+
+  var ef1El = document.getElementById('kpi-ef1');
+  ef1El.textContent = e(r1.effortAvec) + '/mois';
+  ef1El.className = 'kpi-value ' + (r1.effortAvec <= 0 ? 'pos' : r1.effortAvec < mens * 0.5 ? 'neu' : 'neg');
+
+  var autoEl = document.getElementById('kpi-autoyr');
+  if (autofinYear) {
+    autoEl.textContent = 'An ' + autofinYear;
+    autoEl.className = 'kpi-value pos';
+  } else {
+    autoEl.textContent = 'Non atteint';
+    autoEl.className = 'kpi-value neg';
+  }
+
+  document.getElementById('kpi-patrim').textContent = e(rFin.patrimNet);
+
+  // Insight
+  var ins = document.getElementById('insight');
+  var rN = rows[Math.min(p.duree, p.horizon) - 1];
+  var cov = (rN.mens > 0) ? ((rN.mens - rN.effortAvec) / rN.mens * 100) : 100;
+
+  if (autofinYear) {
+    ins.className = 'insight ok';
+    ins.innerHTML =
+      '<strong>Autofinancement atteint à l\'an ' + autofinYear + '</strong> — à partir de cette année, les revenus SCPI combinés couvrent intégralement la mensualité de crédit. ' +
+      'L\'effort net devient positif : le client perçoit un revenu net mensuel de <strong>' + e(-rN.effortAvec) + '</strong> en fin de crédit, ' +
+      'pour un patrimoine net constitué de <strong>' + e(rFin.patrimNet) + '</strong> à l\'horizon de la simulation.';
+  } else if (cov >= 60) {
+    ins.className = 'insight warn';
+    ins.innerHTML =
+      'Les revenus SCPI couvrent <strong>' + fmt(cov, 0) + ' %</strong> de la mensualité en fin de crédit. ' +
+      'L\'effort net résiduel est de <strong>' + e(rN.effortAvec) + '/mois</strong>. ' +
+      'Pour atteindre l\'autofinancement, augmentez le versement initial ou le rendement cible.';
+  } else {
+    ins.className = 'insight bad';
+    ins.innerHTML =
+      'Couverture à <strong>' + fmt(cov, 0) + ' %</strong> en fin de crédit. ' +
+      'Ajustez les paramètres (montant emprunté, versement initial, rendement) pour améliorer significativement l\'effort net.';
+  }
+
+  // Tableau
+  var tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  var sepDone = false;
+
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+
+    if (!row.inCredit && !sepDone) {
+      var sep = document.createElement('tr');
+      sep.className = 'sep';
+      sep.innerHTML = '<td colspan="6">↓ Fin du crédit — les colonnes affichent désormais le revenu net mensuel perçu (SCPI crédit remboursée + SCPI comptant)</td>';
+      tbody.appendChild(sep);
+      sepDone = true;
+    }
+
+    var tr = document.createElement('tr');
+    if (!row.inCredit) tr.className = 'post';
+    if (row.isAutofin)  tr.className = (tr.className ? tr.className + ' ' : '') + 'autofin';
+
+    var autoLabel = row.isAutofin ? ' ★' : '';
+
+    // During credit: show effort (positive = cost, negative = gain)
+    // After credit: show net revenue (always positive = income)
+    var esSCl, esVal, eaACl, eaVal;
+    if (row.inCredit) {
+      esSCl = row.effortSans <= 0 ? 'pos' : 'neg';
+      esVal = e(row.effortSans);
+      eaACl = row.effortAvec <= 0 ? 'pos' : row.effortAvec < mens * 0.4 ? 'blu' : 'neg';
+      eaVal = e(row.effortAvec);
+    } else {
+      // Post-credit: display as positive revenue
+      esSCl = 'pos';
+      esVal = e(-row.effortSans);
+      eaACl = 'pos';
+      eaVal = e(-row.effortAvec);
+    }
+
+    tr.innerHTML =
+      '<td>' + 'An ' + row.yr + autoLabel + '</td>' +
+      '<td class="bl">' + (row.inCredit ? e(row.mens) : '—') + '</td>' +
+      '<td class="' + esSCl + ' bl">' + esVal + '</td>' +
+      '<td class="' + eaACl + '">' + eaVal + '</td>' +
+      '<td class="blu bl">' + e(row.patrimBrut) + '</td>' +
+      '<td class="pos">' + e(row.patrimNet) + '</td>';
+
+    tbody.appendChild(tr);
+  }
+
+  // Chart
+  var labels = rows.map(function(r) { return 'An ' + r.yr; });
+  var dMens  = rows.map(function(r) { return r.inCredit ? +r.mens.toFixed(0) : null; });
+  var dES    = rows.map(function(r) { return +r.effortSans.toFixed(0); });
+  var dEA    = rows.map(function(r) { return +r.effortAvec.toFixed(0); });
+  var postIdx = p.duree;
+
+  var postPlugin = {
+    id: 'pz',
+    beforeDraw: function(c) {
+      var x = c.scales.x, y = c.scales.y, ctx = c.ctx;
+      if (postIdx >= labels.length) return;
+      var x0 = x.getPixelForValue(postIdx - 0.5), x1 = x.getPixelForValue(labels.length - 0.5);
+      ctx.save(); ctx.fillStyle = 'rgba(26,95,168,0.06)';
+      ctx.fillRect(x0, y.top, x1 - x0, y.bottom - y.top); ctx.restore();
+    }
+  };
+
+  // Autofinancement vertical line
+  var autoPlugin = {
+    id: 'af',
+    afterDraw: function(c) {
+      if (!autofinYear) return;
+      var x = c.scales.x, y = c.scales.y, ctx = c.ctx;
+      var xp = x.getPixelForValue(autofinYear - 1);
+      ctx.save();
+      ctx.strokeStyle = '#156b42'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.moveTo(xp, y.top); ctx.lineTo(xp, y.bottom); ctx.stroke();
+      ctx.fillStyle = '#156b42'; ctx.font = '11px system-ui'; ctx.fillText('Autofinancement', xp + 4, y.top + 14);
+      ctx.restore();
+    }
+  };
+
+  if (chartFlux) chartFlux.destroy();
+  chartFlux = new Chart(document.getElementById('chartFlux'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Mensualité brute', data: dMens, borderColor: '#b83030', borderWidth: 2, pointRadius: 0, fill: false, tension: 0, spanGaps: false },
+        { label: 'Effort sans comptant', data: dES, borderColor: '#d4763a', borderWidth: 1.5, borderDash: [5,4], pointRadius: 0, fill: false, tension: 0.2 },
+        { label: 'Effort avec comptant', data: dEA, borderColor: '#156b42', borderWidth: 2, backgroundColor: 'rgba(21,107,66,0.07)', pointRadius: 2, pointBackgroundColor: '#156b42', fill: 'origin', tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(c) { return c.dataset.label + ' : ' + (c.raw !== null ? e(c.raw) : '—'); } } }
+      },
+      scales: {
+        x: { ticks: { color: '#9a9890', font: { size: 11 }, maxTicksLimit: 15 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        y: { ticks: { color: '#9a9890', font: { size: 11 }, callback: function(v) { return e(v); } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      }
+    },
+    plugins: [postPlugin, autoPlugin]
+  });
+}
+
+// Sliders
+var map = {
+  montant: function(v) { return new Intl.NumberFormat('fr-FR').format(+v) + ' €'; },
+  duree:   function(v) { return v + ' ans'; },
+  taeg:    function(v) { return (+v).toFixed(1).replace('.', ',') + ' %'; },
+  rend1:   function(v) { return (+v).toFixed(1).replace('.', ',') + ' %'; },
+  reval1:  function(v) { return (+v).toFixed(1).replace('.', ',') + ' %'; },
+  initial: function(v) { return new Intl.NumberFormat('fr-FR').format(+v) + ' €'; },
+  prog:    function(v) { return new Intl.NumberFormat('fr-FR').format(+v) + ' €'; },
+  rend2:   function(v) { return (+v).toFixed(1).replace('.', ',') + ' %'; },
+  reval2:  function(v) { return (+v).toFixed(1).replace('.', ',') + ' %'; },
+  tmi:     function(v) { return v + ' %'; },
+  rts:     function(v) { return (+v).toFixed(1).replace('.', ',') + ' %'; },
+  horizon: function(v) { return v + ' ans'; }
+};
+Object.keys(map).forEach(function(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
+    var lbl = document.getElementById('v-' + id);
+    if (lbl) lbl.textContent = map[id](el.value);
+    compute();
+  });
+});
+compute();
+</script>
+</body>
+</html>
