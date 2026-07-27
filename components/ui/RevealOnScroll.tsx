@@ -15,10 +15,10 @@ export default function RevealOnScroll({ children, delay = 0, className = "" }: 
   return (
     <motion.div
       className={className}
-      initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 32, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.8, ease: "easeOut", delay }}
+      transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay }}
     >
       {children}
     </motion.div>

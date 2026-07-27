@@ -1,10 +1,36 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { useRef, type MouseEvent } from "react";
 import Button from "@/components/ui/Button";
 
 export default function Hero() {
   const shouldReduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const rawBlueprintX = useMotionValue(0);
+  const rawBlueprintY = useMotionValue(0);
+  const blueprintX = useSpring(rawBlueprintX, { stiffness: 60, damping: 20 });
+  const blueprintY = useSpring(rawBlueprintY, { stiffness: 60, damping: 20 });
+
+  const rawGlowX = useMotionValue(50);
+  const rawGlowY = useMotionValue(35);
+  const glowX = useSpring(rawGlowX, { stiffness: 40, damping: 22 });
+  const glowY = useSpring(rawGlowY, { stiffness: 40, damping: 22 });
+  const glowLeft = useTransform(glowX, (v) => `${v}%`);
+  const glowTop = useTransform(glowY, (v) => `${v}%`);
+
+  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
+    if (shouldReduceMotion || !sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    rawBlueprintX.set((px - 0.5) * -24);
+    rawBlueprintY.set((py - 0.5) * -24);
+    rawGlowX.set(px * 100);
+    rawGlowY.set(py * 100);
+  };
+
   const rise = (delay: number) => ({
     initial: shouldReduceMotion ? false : { opacity: 0, y: 22 },
     animate: { opacity: 1, y: 0 },
@@ -12,8 +38,25 @@ export default function Hero() {
   });
 
   return (
-    <section className="relative flex min-h-screen flex-col justify-center overflow-hidden px-[6vw]">
-      <div className="hero-blueprint" />
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      className="relative flex min-h-screen flex-col justify-center overflow-hidden px-[6vw]"
+    >
+      <motion.div className="hero-blueprint" style={shouldReduceMotion ? undefined : { x: blueprintX, y: blueprintY }} />
+
+      {!shouldReduceMotion && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <motion.div
+            className="absolute h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-3xl"
+            style={{
+              left: glowLeft,
+              top: glowTop,
+              background: "radial-gradient(circle, rgba(169,132,63,0.35) 0%, transparent 70%)",
+            }}
+          />
+        </div>
+      )}
 
       <div className="relative max-w-[900px] pt-20">
         <motion.p className="eyebrow" {...rise(0.05)}>
