@@ -46,7 +46,9 @@ export default function AProposPage() {
           <div>
             <h2 className="text-lg font-[450] text-ink">Formation &amp; engagement</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
-              Ingénieur diplômé de l&apos;ENSMAC. Mécène de l&apos;association EPIC — FinnzAct.
+              Ingénieur diplômé de l&apos;ENSMAC. Mécène du programme FinzzAct, je reverse une partie de ma
+              rémunération à la Fondation Epic, qui sélectionne et soutient des associations engagées pour
+              l&apos;enfance, la jeunesse et l&apos;environnement.
             </p>
           </div>
         </RevealOnScroll>
