@@ -10,7 +10,13 @@
       "Bash(tar -xzf node.tar.gz)",
       "Bash(rm -rf ~/.local/node)",
       "Bash(mv node-v24.18.0-darwin-arm64 ~/.local/node)",
-      "Bash(find '/Users/bricepoitau/Assistant Claude/Dossier de référence/site-brice-poitau' -maxdepth 1 -iname tailwind.config*)"
+      "Bash(find '/Users/bricepoitau/Assistant Claude/Dossier de référence/site-brice-poitau' -maxdepth 1 -iname tailwind.config*)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -sL https://incoval.github.io/achat-ou-location-simulation/ -o /tmp/achat-ou-louer.html)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(cat /tmp/achat-ou-louer.html)",
+      "Bash(git add *)"
     ]
   }
 }
