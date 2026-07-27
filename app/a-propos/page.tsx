@@ -50,6 +50,14 @@ export default function AProposPage() {
               rémunération à la Fondation Epic, qui sélectionne et soutient des associations engagées pour
               l&apos;enfance, la jeunesse et l&apos;environnement.
             </p>
+            <a
+              href="https://www.finzzle-groupe.com/finzzact-philanthropie/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-gold px-5 py-3 text-[13px] font-semibold text-ink shadow-[0_8px_20px_-8px_rgba(169,132,63,0.55)] transition-[background-color,color,gap] duration-300 ease-out hover:gap-3 hover:bg-ink hover:text-white"
+            >
+              Découvrir FinzzAct →
+            </a>
           </div>
         </RevealOnScroll>
       </div>
