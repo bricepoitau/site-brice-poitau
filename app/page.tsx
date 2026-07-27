@@ -10,8 +10,9 @@ const apercu = simulateurs.filter((s) =>
 );
 
 const habilitations = [
-  "Conseiller en Investissements Financiers (CIF)",
-  "Immatriculé ORIAS n°[À COMPLÉTER PAR LE CLIENT]",
+  "Immatriculé ORIAS n°25004012",
+  "Mandataire d'intermédiaire en assurance et en opérations de banque",
+  "Agent lié de prestataire de services d'investissement",
 ];
 
 export default function Home() {

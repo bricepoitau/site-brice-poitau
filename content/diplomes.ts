@@ -3,5 +3,4 @@ export interface Diplome {
   annee?: string;
 }
 
-// À compléter par le client : Master, CIF, ORIAS, autres certifications...
-export const diplomes: Diplome[] = [];
+export const diplomes: Diplome[] = [{ intitule: "Ingénieur diplômé de l'ENSMAC" }];

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import IframeEmbed from "@/components/simulateurs/IframeEmbed";
+import UnePierreDeuxCoupsSimulator from "@/components/simulateurs/une-pierre-deux-coups/UnePierreDeuxCoupsSimulator";
 
 export const metadata: Metadata = {
   title: "Une pierre deux coups — SCPI à crédit",
@@ -22,7 +22,7 @@ export default function UnePierreDeuxCoupsPage() {
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.1}>
-        <IframeEmbed src="/simulateurs/une-pierre-deux-coups.html" title="Simulateur une pierre deux coups" height={1600} />
+        <UnePierreDeuxCoupsSimulator />
       </RevealOnScroll>
 
       <p className="mx-auto mt-10 max-w-[720px] text-center text-xs leading-relaxed text-text-muted">

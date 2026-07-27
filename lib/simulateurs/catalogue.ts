@@ -2,7 +2,6 @@ export interface SimulateurEntry {
   tag: string;
   title: string;
   description: string;
-  pills?: string[];
   href?: string;
 }
 
@@ -11,7 +10,6 @@ export const simulateurs: SimulateurEntry[] = [
     tag: "Épargne & capitalisation",
     title: "Assurance Vie",
     description: "Projeter l'encours, les versements et la puissance des intérêts composés dans le temps.",
-    pills: ["Projection", "Intérêts composés"],
     href: "/simulateurs/assurance-vie",
   },
   {

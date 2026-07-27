@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import IframeEmbed from "@/components/simulateurs/IframeEmbed";
+import AcheterLouerSimulator from "@/components/simulateurs/acheter-louer/AcheterLouerSimulator";
 
 export const metadata: Metadata = {
   title: "Acheter ou louer",
@@ -16,21 +16,14 @@ export default function AcheterLouerPage() {
           Acheter ou louer
         </h1>
         <p className="mt-4 text-[15px] leading-relaxed text-text-muted">
-          Arbitrez entre acquisition et location selon votre horizon et votre capacité d&apos;épargne.
+          Arbitrez entre acquisition et location selon votre horizon et votre capacité d&apos;épargne, dans les 10
+          plus grandes villes françaises.
         </p>
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.1}>
-        <IframeEmbed
-          src="https://incoval.github.io/achat-ou-location-simulation/"
-          title="Simulateur acheter ou louer"
-        />
+        <AcheterLouerSimulator />
       </RevealOnScroll>
-
-      <p className="mx-auto mt-10 max-w-[720px] text-center text-xs leading-relaxed text-text-muted">
-        Simulation à titre pédagogique, hors fiscalité et hors aléas de marché. Les performances passées ne
-        préjugent pas des performances futures. Ne constitue pas un conseil en investissement personnalisé.
-      </p>
     </section>
   );
 }

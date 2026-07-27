@@ -51,7 +51,24 @@ export default function RessourcesPage() {
         </RevealOnScroll>
       </div>
 
-      <RevealOnScroll delay={0.2} className="mt-16">
+      <RevealOnScroll delay={0.2} className="mt-16 rounded-[18px] border border-line bg-cream-card p-8">
+        <h2 className="text-xl font-[450] text-ink">Liens utiles</h2>
+        <ul className="mt-5 flex flex-col gap-3">
+          <li className="text-sm text-text-muted">
+            <a
+              href="https://www.info-retraite.fr/portail-services/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ink underline hover:text-gold"
+            >
+              info-retraite.fr
+            </a>{" "}
+            — téléchargez votre relevé de carrière et estimez votre future retraite.
+          </li>
+        </ul>
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={0.3} className="mt-16">
         <h2 className="text-xl font-[450] text-ink">Articles & guides</h2>
         <div className="mt-5 rounded-[18px] border border-dashed border-line p-10 text-center text-sm text-text-muted">
           À venir prochainement.

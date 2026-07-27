@@ -27,13 +27,26 @@ export default function AProposPage() {
           <div>
             <h2 className="text-lg font-[450] text-ink">Parcours</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
-              [À COMPLÉTER PAR LE CLIENT — parcours professionnel, formation, expériences]
+              J&apos;ai mené mes études d&apos;ingénieur en parallèle d&apos;une carrière de sportif de haut niveau.
+              Les contingences propres à cette double vie m&apos;ont poussé à chercher, pour la suite, un métier
+              porteur de sens — un métier où je pourrais être réellement utile, et où je pourrais construire une
+              hyper-expertise plutôt que de rester en surface. J&apos;avais appris à réfléchir avec rigueur. Il me
+              restait à monter ma propre structure, pour exercer ce métier à ma manière.
             </p>
           </div>
           <div>
             <h2 className="text-lg font-[450] text-ink">Philosophie de conseil</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
-              [À COMPLÉTER PAR LE CLIENT — vision de l&apos;accompagnement patrimonial, valeurs, méthode]
+              Je me distingue par mon sens du conseil, mon expertise, et ma manière indépendante de le délivrer —
+              en architecture ouverte, sans être lié à un produit ou un assureur en particulier. Cette
+              indépendance, je la mets au service de la pédagogie : expliquer avant de recommander, pour que
+              chaque décision soit comprise, et non simplement suivie.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-lg font-[450] text-ink">Formation &amp; engagement</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
+              Ingénieur diplômé de l&apos;ENSMAC. Mécène de l&apos;association EPIC — FinnzAct.
             </p>
           </div>
         </RevealOnScroll>

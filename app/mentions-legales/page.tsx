@@ -13,18 +13,38 @@ export default function MentionsLegalesPage() {
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Éditeur du site</h2>
           <p>Brice Poitau Conseils</p>
-          <p>Forme juridique : [À COMPLÉTER]</p>
-          <p>SIREN : [À COMPLÉTER]</p>
-          <p>Siège social : [À COMPLÉTER]</p>
+          <p>RCS Toulouse n° 850 805 508</p>
+          <p>Siège social : 11 bis rue Pénicaud, 33300 Bordeaux</p>
           <p>Email : [À COMPLÉTER]</p>
           <p>Directeur de la publication : Brice Poitau</p>
         </div>
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Statut professionnel</h2>
-          <p>Conseiller en Investissements Financiers (CIF), membre d&apos;une association agréée par l&apos;AMF : [À COMPLÉTER]</p>
-          <p>Immatriculé ORIAS sous le n° [À COMPLÉTER] (vérifiable sur www.orias.fr)</p>
-          <p>Assurance Responsabilité Civile Professionnelle (RCP) souscrite auprès de : [À COMPLÉTER]</p>
+          <p>
+            Immatriculé à l&apos;ORIAS sous le n° 25004012 (vérifiable sur{" "}
+            <a href="http://www.orias.fr" target="_blank" rel="noopener noreferrer" className="underline hover:text-gold">
+              www.orias.fr
+            </a>
+            ) en qualité de :
+          </p>
+          <ul className="list-disc pl-5">
+            <li>Mandataire d&apos;intermédiaire en opérations de banque et services de paiement</li>
+            <li>Mandataire d&apos;intermédiaire en assurance</li>
+            <li>Agent lié de prestataire de services d&apos;investissement</li>
+          </ul>
+          <p>
+            Titulaire de la carte de transactions sur immeubles sans manipulation de fonds — carte professionnelle
+            immobilière n° 31012015000001813 (CCI de Toulouse)
+          </p>
+          <p>
+            Sous le contrôle de l&apos;Autorité de Contrôle Prudentiel et de Résolution (ACPR) — 4 Place de
+            Budapest, CS 92459, 75436 Paris Cedex 9
+          </p>
+          <p>
+            Assurance Responsabilité Civile Professionnelle (RCP) conforme au Code des assurances, n° 7400023129,
+            souscrite auprès de Zurich Insurance plc, 112 avenue de Wagram, 75017 Paris
+          </p>
         </div>
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">

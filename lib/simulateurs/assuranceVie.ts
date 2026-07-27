@@ -4,6 +4,7 @@ export interface AssuranceVieParams {
   dureeAnnees: number;
   tauxAnnuelPct: number;
   fraisGestionPct: number;
+  droitsEntreePct: number;
 }
 
 export interface AssuranceViePoint {
@@ -21,19 +22,23 @@ export interface AssuranceVieResult {
 }
 
 export function simulerAssuranceVie(params: AssuranceVieParams): AssuranceVieResult {
-  const { capitalInitial, versementMensuel, dureeAnnees, tauxAnnuelPct, fraisGestionPct } = params;
+  const { capitalInitial, versementMensuel, dureeAnnees, tauxAnnuelPct, fraisGestionPct, droitsEntreePct } = params;
   const rMensuel = (tauxAnnuelPct - fraisGestionPct) / 100 / 12;
+  const facteurNet = 1 - droitsEntreePct / 100;
   const nbMois = Math.round(dureeAnnees * 12);
 
+  const capitalInitialNet = capitalInitial * facteurNet;
+  const versementNet = versementMensuel * facteurNet;
+
   const serie: AssuranceViePoint[] = [
-    { mois: 0, annee: 0, totalVerse: capitalInitial, capital: capitalInitial },
+    { mois: 0, annee: 0, totalVerse: capitalInitial, capital: capitalInitialNet },
   ];
 
-  let capital = capitalInitial;
+  let capital = capitalInitialNet;
   let totalVerse = capitalInitial;
 
   for (let mois = 1; mois <= nbMois; mois += 1) {
-    capital = capital * (1 + rMensuel) + versementMensuel;
+    capital = capital * (1 + rMensuel) + versementNet;
     totalVerse += versementMensuel;
     serie.push({ mois, annee: mois / 12, totalVerse, capital });
   }
@@ -58,4 +63,5 @@ export const DEFAULT_PARAMS: AssuranceVieParams = {
   dureeAnnees: 15,
   tauxAnnuelPct: 4,
   fraisGestionPct: 0.6,
+  droitsEntreePct: 4.8,
 };

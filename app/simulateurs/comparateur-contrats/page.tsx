@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import IframeEmbed from "@/components/simulateurs/IframeEmbed";
+import ComparateurContratsSimulator from "@/components/simulateurs/comparateur-contrats/ComparateurContratsSimulator";
 
 export const metadata: Metadata = {
   title: "Comparateur de contrats",
@@ -22,13 +22,8 @@ export default function ComparateurContratsPage() {
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.1}>
-        <IframeEmbed src="/simulateurs/comparateur-contrats.html" title="Simulateur comparateur de contrats" />
+        <ComparateurContratsSimulator />
       </RevealOnScroll>
-
-      <p className="mx-auto mt-10 max-w-[720px] text-center text-xs leading-relaxed text-text-muted">
-        Simulation à titre pédagogique, hors fiscalité et hors aléas de marché. Les performances passées ne
-        préjugent pas des performances futures. Ne constitue pas un conseil en investissement personnalisé.
-      </p>
     </section>
   );
 }

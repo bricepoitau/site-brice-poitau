@@ -88,7 +88,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="inline-flex w-fit items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gold disabled:opacity-50"
+        className="inline-flex w-fit items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink shadow-[0_8px_20px_-8px_rgba(169,132,63,0.55)] transition-[background-color,color] duration-300 hover:bg-ink hover:text-white disabled:opacity-50"
       >
         {status === "sending" ? "Envoi…" : "Envoyer le message"}
       </button>
