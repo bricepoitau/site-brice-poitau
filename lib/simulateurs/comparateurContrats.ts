@@ -133,6 +133,6 @@ export function simulerComparateurContrats(params: ComparateurContratsParams): C
 export const DEFAULT_COMPARATEUR_PARAMS: ComparateurContratsParams = {
   capital: 100000,
   horizonAnnees: 10,
-  contratA: { nom: "Contrat Haut de Gamme", droitsEntreePct: 4.8, rendementPct: 2, fraisGestionPct: 1 },
-  contratB: { nom: "Contrat Classique", droitsEntreePct: 0, rendementPct: 2, fraisGestionPct: 1 },
+  contratA: { nom: "Contrat Haut de Gamme", droitsEntreePct: 4.8, rendementPct: 4, fraisGestionPct: 1 },
+  contratB: { nom: "Contrat Classique", droitsEntreePct: 0, rendementPct: 4, fraisGestionPct: 1 },
 };

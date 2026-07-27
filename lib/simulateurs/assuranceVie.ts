@@ -62,6 +62,6 @@ export const DEFAULT_PARAMS: AssuranceVieParams = {
   versementMensuel: 200,
   dureeAnnees: 15,
   tauxAnnuelPct: 4,
-  fraisGestionPct: 0.6,
+  fraisGestionPct: 1,
   droitsEntreePct: 4.8,
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import { partenaires } from "@/content/partenaires";
 import { diplomes } from "@/content/diplomes";
+import { habilitations } from "@/content/habilitations";
 
 export const metadata: Metadata = {
   title: "Ressources",
@@ -14,13 +15,13 @@ export default function RessourcesPage() {
       <RevealOnScroll className="mb-16 max-w-[640px]">
         <p className="eyebrow">Ressources</p>
         <h1 className="mt-2.5 text-[clamp(28px,3.4vw,42px)] leading-[1.15] font-[450] text-ink">
-          Partenaires, habilitations & certifications
+          Partenaires, habilitations & diplômes
         </h1>
       </RevealOnScroll>
 
       <div className="grid grid-cols-1 gap-8 [@media(min-width:900px)]:grid-cols-2">
         <RevealOnScroll className="rounded-[18px] border border-line bg-cream-card p-8">
-          <h2 className="text-xl font-[450] text-ink">Nos partenaires & habilitations</h2>
+          <h2 className="text-xl font-[450] text-ink">Nos partenaires</h2>
           {partenaires.length > 0 ? (
             <ul className="mt-5 flex flex-col gap-3">
               {partenaires.map((p) => (
@@ -35,19 +36,20 @@ export default function RessourcesPage() {
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1} className="rounded-[18px] border border-line bg-cream-card p-8">
-          <h2 className="text-xl font-[450] text-ink">Diplômes & certifications</h2>
-          {diplomes.length > 0 ? (
-            <ul className="mt-5 flex flex-col gap-3">
-              {diplomes.map((d) => (
-                <li key={d.intitule} className="text-sm text-text-muted">
-                  {d.intitule}
-                  {d.annee ? ` — ${d.annee}` : ""}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-5 text-sm text-text-muted">[À COMPLÉTER PAR LE CLIENT]</p>
-          )}
+          <h2 className="text-xl font-[450] text-ink">Habilitations & diplômes</h2>
+          <ul className="mt-5 flex flex-col gap-3">
+            {diplomes.map((d) => (
+              <li key={d.intitule} className="text-sm text-text-muted">
+                {d.intitule}
+                {d.annee ? ` — ${d.annee}` : ""}
+              </li>
+            ))}
+            {habilitations.map((h) => (
+              <li key={h} className="text-sm text-text-muted">
+                {h}
+              </li>
+            ))}
+          </ul>
         </RevealOnScroll>
       </div>
 

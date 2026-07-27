@@ -29,13 +29,13 @@ function ContratFields({
 
   return (
     <div className={`rounded-[18px] border border-line bg-cream-card p-6 ${accentClass}`}>
-      <div className="mb-4 flex items-center justify-between gap-3">
+      <div className="mb-4">
         <span className="text-[11px] font-semibold tracking-[.1em] text-text-muted uppercase">{label}</span>
         <input
           type="text"
           value={contrat.nom}
           onChange={(e) => set("nom", e.target.value)}
-          className="w-40 rounded-lg border border-line bg-white px-2.5 py-1.5 text-sm text-ink"
+          className="mt-1.5 w-full rounded-lg border border-line bg-white px-3 py-2 font-serif text-lg font-[450] text-ink"
         />
       </div>
       <div className="flex flex-col gap-4">

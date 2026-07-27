@@ -24,7 +24,7 @@ export default function Home() {
         <RevealOnScroll className="mb-14 max-w-[640px]">
           <p className="eyebrow">Outils de simulation</p>
           <h2 className="mt-2.5 text-[clamp(28px,3.4vw,42px)] leading-[1.15] font-[450] text-ink">
-            Visualisez l&apos;impact de chaque stratégie avant de vous engager
+            Visualisez l&apos;impact de chaque stratégie pour en comprendre tout l&apos;intérêt
           </h2>
         </RevealOnScroll>
 
@@ -73,7 +73,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex flex-col">
-            {["Nos partenaires & habilitations", "Diplômes & certifications"].map((item, i) => (
+            {["Nos partenaires", "Habilitations & diplômes"].map((item, i) => (
               <div
                 key={item}
                 className="flex items-center justify-between border-b border-white/10 py-5 transition-[padding] duration-300 hover:pl-2.5"
@@ -92,7 +92,8 @@ export default function Home() {
         </RevealOnScroll>
         <RevealOnScroll delay={0.1}>
           <h2 className="mx-auto mt-6 max-w-[720px] text-[clamp(30px,4vw,52px)] leading-[1.2] font-[450] text-ink">
-            Un premier échange, sans engagement, pour clarifier votre situation patrimoniale.
+            Un rendez-vous découverte pour clarifier votre situation patrimoniale et construire, ensemble, votre
+            stratégie.
           </h2>
         </RevealOnScroll>
         <RevealOnScroll delay={0.2} className="mt-7.5 flex justify-center">
