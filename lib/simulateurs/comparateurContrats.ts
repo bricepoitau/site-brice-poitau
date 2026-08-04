@@ -87,7 +87,7 @@ export function simulerComparateurContrats(params: ComparateurContratsParams): C
   const finalA = serieAnnuelle[horizonAnnees].valeurA;
   const finalB = serieAnnuelle[horizonAnnees].valeurB;
 
-  const jalons = [1, 2, 3, 5, 7, 10, 12, 15, 20, 25, 30].filter((a) => a <= horizonAnnees);
+  const jalons = [1, 2, 3, 5, 7, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50].filter((a) => a <= horizonAnnees);
   if (!jalons.includes(horizonAnnees)) jalons.push(horizonAnnees);
   const croisementAnneeEntier = aCroisement ? Math.round(crossT as number) : null;
   if (croisementAnneeEntier !== null && croisementAnneeEntier > 0 && !jalons.includes(croisementAnneeEntier)) {
@@ -134,5 +134,5 @@ export const DEFAULT_COMPARATEUR_PARAMS: ComparateurContratsParams = {
   capital: 100000,
   horizonAnnees: 10,
   contratA: { nom: "Contrat Haut de Gamme", droitsEntreePct: 4.8, rendementPct: 4, fraisGestionPct: 1 },
-  contratB: { nom: "Contrat Classique", droitsEntreePct: 0, rendementPct: 4, fraisGestionPct: 1 },
+  contratB: { nom: "Contrat Classique", droitsEntreePct: 0, rendementPct: 2, fraisGestionPct: 1 },
 };

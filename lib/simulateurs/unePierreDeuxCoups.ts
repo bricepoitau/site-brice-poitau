@@ -120,7 +120,7 @@ export function simulerUnePierreDeuxCoups(params: UnePierreDeuxCoupsParams): Une
 }
 
 export const DEFAULT_UNE_PIERRE_DEUX_COUPS_PARAMS: UnePierreDeuxCoupsParams = {
-  montantEmprunte: 150000,
+  montantEmprunte: 100000,
   dureeCredit: 25,
   taegPct: 5.5,
   rendementCreditPct: 5.5,

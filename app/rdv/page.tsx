@@ -18,7 +18,7 @@ const rendezVous = [
     titre: "Rendez-vous Découverte",
     duree: "1h30",
     description:
-      "Un point complet sur votre situation patrimoniale pour esquisser, ensemble, une première stratégie.",
+      "Un point complet sur votre situation patrimoniale, avec un audit patrimonial offert, pour esquisser, ensemble, une première stratégie.",
     url: "https://meet.brevo.com/brice-poitau/decouverte",
   },
   {
@@ -30,7 +30,7 @@ const rendezVous = [
 ];
 
 export default function RdvPage() {
-  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "[À COMPLÉTER PAR LE CLIENT]";
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "conseil@bricepoitau.com";
   const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE || "[À COMPLÉTER PAR LE CLIENT]";
 
   return (
@@ -72,6 +72,8 @@ export default function RdvPage() {
           <h2 className="text-lg font-[450] text-ink">Contact direct</h2>
           <p className="mt-3 text-sm text-text-muted">{contactEmail}</p>
           <p className="mt-1 text-sm text-text-muted">{contactPhone}</p>
+          <p className="mt-5 text-xs tracking-[.08em] text-text-muted uppercase">Bureaux — accueil physique</p>
+          <p className="mt-1.5 text-sm text-text-muted">11 bis rue Pénicaud, 33300 Bordeaux</p>
         </RevealOnScroll>
         <RevealOnScroll delay={0.1}>
           <ContactForm />

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 export const metadata: Metadata = {
@@ -18,8 +19,15 @@ export default function AProposPage() {
 
       <div className="mt-14 grid grid-cols-1 gap-12 [@media(min-width:900px)]:grid-cols-[280px_1fr]">
         <RevealOnScroll delay={0.1}>
-          <div className="flex aspect-[4/5] items-center justify-center rounded-[18px] border border-dashed border-line bg-cream-card text-center text-sm text-text-muted">
-            [Photo à compléter par le client]
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] border border-line bg-cream-card">
+            <Image
+              src="/images/brice-poitau.jpg"
+              alt="Brice Poitau"
+              fill
+              className="object-cover"
+              sizes="280px"
+              priority
+            />
           </div>
         </RevealOnScroll>
 
@@ -27,11 +35,16 @@ export default function AProposPage() {
           <div>
             <h2 className="text-lg font-[450] text-ink">Parcours</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
-              J&apos;ai mené mes études d&apos;ingénieur en parallèle d&apos;une carrière de sportif de haut niveau.
-              Les contingences propres à cette double vie m&apos;ont poussé à chercher, pour la suite, un métier
-              porteur de sens — un métier où je pourrais être réellement utile, et où je pourrais construire une
-              hyper-expertise plutôt que de rester en surface. J&apos;avais appris à réfléchir avec rigueur. Il me
-              restait à monter ma propre structure, pour exercer ce métier à ma manière.
+              Ingénieur et rugbyman de haut niveau, j&apos;ai grandi dans l&apos;exigence d&apos;un double parcours.
+            </p>
+            <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
+              C&apos;est cette exigence qui structure aujourd&apos;hui ma façon de conseiller : rigueur dans
+              l&apos;analyse, disponibilité dans l&apos;accompagnement.
+            </p>
+            <p className="mt-3 text-[15px] leading-relaxed text-text-muted">
+              C&apos;est pour cette raison que j&apos;exerce en indépendance : pour garder la liberté de
+              recommander ce qui sert vraiment mes clients, et construire avec chacun d&apos;eux une relation de
+              proximité, dans la durée.
             </p>
           </div>
           <div>

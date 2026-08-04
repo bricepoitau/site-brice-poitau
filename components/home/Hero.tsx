@@ -73,8 +73,9 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p className="mt-6.5 max-w-[560px] text-lg leading-relaxed text-text-muted" {...rise(0.35)}>
-          Un accompagnement patrimonial rigoureux — épargne, immobilier, retraite et transmission — pensé comme une
-          architecture sur-mesure, avec des outils de simulation clairs pour éclairer chaque décision.
+          Un accompagnement patrimonial rigoureux — pour les particuliers comme pour les personnes morales —
+          épargne, immobilier, retraite et transmission — pensé comme une architecture sur-mesure, avec des outils
+          de simulation clairs pour éclairer chaque décision.
         </motion.p>
 
         <motion.div className="mt-10 flex flex-wrap items-center gap-4" {...rise(0.55)}>

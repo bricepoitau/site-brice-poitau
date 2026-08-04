@@ -16,6 +16,7 @@ export const simulateurs: SimulateurEntry[] = [
     tag: "Immobilier & revenus",
     title: "SCPI",
     description: "Estimer les revenus locatifs potentiels et le rendement net d'une stratégie SCPI.",
+    href: "/simulateurs/scpi",
   },
   {
     tag: "Retraite & fiscalité",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export default function Footer() {
-  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "[À COMPLÉTER PAR LE CLIENT]";
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "conseil@bricepoitau.com";
   const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE || "[À COMPLÉTER PAR LE CLIENT]";
 
   return (

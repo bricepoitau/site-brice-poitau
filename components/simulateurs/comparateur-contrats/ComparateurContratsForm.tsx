@@ -101,7 +101,7 @@ export default function ComparateurContratsForm({ params, onChange }: Comparateu
             value={params.horizonAnnees}
             displayValue={`${params.horizonAnnees} ans`}
             min={1}
-            max={30}
+            max={50}
             step={1}
             onChange={(v) => onChange({ ...params, horizonAnnees: v })}
           />

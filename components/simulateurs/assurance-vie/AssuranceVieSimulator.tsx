@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import AssuranceVieForm from "./AssuranceVieForm";
 import AssuranceVieChart from "./AssuranceVieChart";
+import DonutRepartition from "@/components/ui/DonutRepartition";
 import { DEFAULT_PARAMS, simulerAssuranceVie } from "@/lib/simulateurs/assuranceVie";
 
 const formatEuros = (v: number) =>
@@ -35,6 +36,16 @@ export default function AssuranceVieSimulator() {
         <div className="rounded-[18px] border border-line bg-cream-card p-6">
           <AssuranceVieChart serie={result.serie} />
         </div>
+
+        <DonutRepartition
+          title="Répartition"
+          centerLabel="Capital final"
+          centerValue={formatEuros(result.capitalFinal)}
+          items={[
+            { label: "Sommes investies", value: result.totalVerse, color: "var(--ink)" },
+            { label: "Intérêts gagnés", value: Math.max(0, result.gains), color: "var(--gold)" },
+          ]}
+        />
       </div>
     </div>
   );
