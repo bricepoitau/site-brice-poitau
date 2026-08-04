@@ -21,7 +21,7 @@ export default function AProposPage() {
         <RevealOnScroll delay={0.1}>
           <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] border border-line bg-cream-card">
             <Image
-              src="/images/brice-poitau.jpg"
+              src="/images/brice-poitau.png"
               alt="Brice Poitau"
               fill
               className="object-cover"
