@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.bricepoitau-conseils.fr/sitemap.xml",
+    sitemap: "https://www.bricepoitau.com/sitemap.xml",
   };
 }

@@ -17,7 +17,7 @@ const inter = Inter({
   weight: ["400", "500", "600"],
 });
 
-const siteUrl = "https://www.bricepoitau-conseils.fr";
+const siteUrl = "https://www.bricepoitau.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
