@@ -2,25 +2,49 @@
 
 import { useState, type FormEvent } from "react";
 
+type Status = "idle" | "sending" | "sent" | "error";
+
 export default function ContactForm() {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<Status>("idle");
+  const [form, setForm] = useState({ name: "", email: "", message: "", company: "" });
 
   const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "conseil@bricepoitau.com";
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-
+  function openMailto() {
     const subject = encodeURIComponent(`Message de ${form.name} — site Brice Poitau Conseils`);
     const bodyText = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`);
     window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${bodyText}`;
-    setSent(true);
   }
 
-  if (sent) {
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setStatus("sending");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (data.fallback) {
+        openMailto();
+        setStatus("sent");
+        return;
+      }
+
+      if (!res.ok) throw new Error();
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "sent") {
     return (
       <p className="rounded-[18px] border border-line bg-cream-card p-8 text-sm text-text-muted">
-        Votre messagerie s&apos;est ouverte avec votre message pré-rempli — il ne reste plus qu&apos;à l&apos;envoyer.
+        Merci, votre message a bien été transmis. Nous revenons vers vous rapidement.
       </p>
     );
   }
@@ -65,12 +89,27 @@ export default function ContactForm() {
           className="mt-1.5 w-full rounded-lg border border-line bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-soft"
         />
       </div>
+      {/* Honeypot: hidden from real visitors, only bots fill this in. */}
+      <input
+        type="text"
+        name="company"
+        value={form.company}
+        onChange={(e) => setForm({ ...form, company: e.target.value })}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute h-0 w-0 opacity-0"
+      />
       <button
         type="submit"
-        className="inline-flex w-fit items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink shadow-[0_8px_20px_-8px_rgba(169,132,63,0.55)] transition-[background-color,color] duration-300 hover:bg-ink hover:text-white"
+        disabled={status === "sending"}
+        className="inline-flex w-fit items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-ink shadow-[0_8px_20px_-8px_rgba(169,132,63,0.55)] transition-[background-color,color] duration-300 hover:bg-ink hover:text-white disabled:opacity-50"
       >
-        Envoyer le message
+        {status === "sending" ? "Envoi…" : "Envoyer le message"}
       </button>
+      {status === "error" && (
+        <p className="text-sm text-red-700">Une erreur est survenue, réessayez ou contactez-nous directement.</p>
+      )}
     </form>
   );
 }
