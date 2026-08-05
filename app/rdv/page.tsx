@@ -31,7 +31,7 @@ const rendezVous = [
 
 export default function RdvPage() {
   const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "conseil@bricepoitau.com";
-  const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE || "[À COMPLÉTER PAR LE CLIENT]";
+  const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE;
 
   return (
     <section className="px-[6vw] py-[160px]">
@@ -71,7 +71,7 @@ export default function RdvPage() {
         <RevealOnScroll className="rounded-[18px] border border-line bg-cream-card p-8">
           <h2 className="text-lg font-[450] text-ink">Contact direct</h2>
           <p className="mt-3 text-sm text-text-muted">{contactEmail}</p>
-          <p className="mt-1 text-sm text-text-muted">{contactPhone}</p>
+          {contactPhone && <p className="mt-1 text-sm text-text-muted">{contactPhone}</p>}
           <p className="mt-5 text-xs tracking-[.08em] text-text-muted uppercase">Bureaux — accueil physique</p>
           <p className="mt-1.5 text-sm text-text-muted">11 bis rue Pénicaud, 33300 Bordeaux</p>
         </RevealOnScroll>

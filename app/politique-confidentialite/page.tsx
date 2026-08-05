@@ -15,20 +15,26 @@ export default function PolitiqueConfidentialitePage() {
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Données collectées</h2>
           <p>
-            Le formulaire de contact collecte votre nom, votre adresse email et le contenu de votre message. Ces
-            données sont utilisées uniquement pour vous répondre et ne sont ni cédées ni utilisées à des fins
-            commerciales par des tiers.
+            Le formulaire de contact n&apos;envoie aucune donnée à un serveur : il ouvre directement votre
+            messagerie habituelle avec un message pré-rempli (nom, email, message), que vous restez libre
+            d&apos;envoyer ou non. Le site lui-même ne collecte ni ne stocke aucune de ces informations. Les
+            échanges que vous nous adressez ensuite par email sont traités uniquement pour vous répondre, et ne
+            sont ni cédés ni utilisés à des fins commerciales par des tiers.
           </p>
         </div>
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Responsable du traitement</h2>
-          <p>Brice Poitau Conseils — [À COMPLÉTER]</p>
+          <p>Brice Poitau Conseils — 4 bis rue du Pasticier, 31470 Fonsorbes</p>
         </div>
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Durée de conservation</h2>
-          <p>Les données transmises via le formulaire de contact sont conservées [À COMPLÉTER].</p>
+          <p>
+            Les échanges par email sont conservés le temps de la relation commerciale puis, en l&apos;absence de
+            relation contractuelle, pendant 3 ans maximum à compter du dernier contact, conformément aux
+            recommandations de la CNIL.
+          </p>
         </div>
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
@@ -36,7 +42,7 @@ export default function PolitiqueConfidentialitePage() {
           <p>
             Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d&apos;un droit
             d&apos;accès, de rectification, d&apos;effacement et d&apos;opposition sur vos données personnelles.
-            Pour l&apos;exercer, contactez-nous à l&apos;adresse [À COMPLÉTER].
+            Pour l&apos;exercer, contactez-nous à l&apos;adresse conseil@bricepoitau.com.
           </p>
         </div>
 
