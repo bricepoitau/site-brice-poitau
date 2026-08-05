@@ -14,7 +14,7 @@ export default function MentionsLegalesPage() {
           <h2 className="text-lg font-[450] text-ink">Éditeur du site</h2>
           <p>Brice Poitau Conseils</p>
           <p>RCS Toulouse n° 850 805 508</p>
-          <p>Siège social : 4 bis rue du Pasticier, 31470 Fonsorbes</p>
+          <p>Siège social : 4 bis rue du Pasticié, 31470 Fonsorbes</p>
           <p>Bureaux (accueil physique) : 11 bis rue Pénicaud, 33300 Bordeaux</p>
           <p>Email : conseil@bricepoitau.com</p>
           <p>Directeur de la publication : Brice Poitau</p>

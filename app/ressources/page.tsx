@@ -79,13 +79,6 @@ export default function RessourcesPage() {
           </li>
         </ul>
       </RevealOnScroll>
-
-      <RevealOnScroll delay={0.3} className="mt-16">
-        <h2 className="text-xl font-[450] text-ink">Articles & guides</h2>
-        <div className="mt-5 rounded-[18px] border border-dashed border-line p-10 text-center text-sm text-text-muted">
-          À venir prochainement.
-        </div>
-      </RevealOnScroll>
     </section>
   );
 }

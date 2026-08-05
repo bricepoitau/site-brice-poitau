@@ -28,11 +28,11 @@ export default function RessourcesTeaser() {
           <div>
             <p className="eyebrow text-gold-soft">Ressources</p>
             <h2 className="mt-3 text-2xl font-[450] text-white [@media(min-width:900px)]:text-[32px]">
-              Une éducation financière gratuite, sans jargon
+              Un réseau de partenaires solide, une expertise vérifiable
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[#C7C1B0]">
-              Des guides pédagogiques rédigés pour comprendre — pas pour vendre. Fiscalité, transmission,
-              placements : de quoi prendre des décisions éclairées avant même votre premier rendez-vous.
+              Nos partenaires, nos habilitations professionnelles et nos diplômes — pour que vous sachiez
+              précisément avec qui vous travaillez.
             </p>
             <Link
               href="/ressources"

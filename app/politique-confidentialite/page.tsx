@@ -25,7 +25,7 @@ export default function PolitiqueConfidentialitePage() {
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Responsable du traitement</h2>
-          <p>Brice Poitau Conseils — 4 bis rue du Pasticier, 31470 Fonsorbes</p>
+          <p>Brice Poitau Conseils — 4 bis rue du Pasticié, 31470 Fonsorbes</p>
         </div>
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
