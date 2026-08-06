@@ -17,7 +17,7 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-line bg-cream/75 px-[6vw] py-[22px] backdrop-blur-md">
       <Link href="/" className="font-serif text-xl font-semibold tracking-[.01em] text-ink">
-        Brice Poitau <span className="text-gold">Conseils</span>
+        Brice Poitau <span className="text-gold">Conseil</span>
       </Link>
 
       <nav className="hidden [@media(min-width:900px)]:block">

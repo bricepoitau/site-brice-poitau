@@ -22,17 +22,17 @@ const siteUrl = "https://www.bricepoitau.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Brice Poitau Conseils — Structurer votre liberté financière",
-    template: "%s — Brice Poitau Conseils",
+    default: "Brice Poitau Conseil — Structurer votre liberté financière",
+    template: "%s — Brice Poitau Conseil",
   },
   description:
     "Cabinet d'ingénierie patrimoniale indépendant. Épargne, immobilier, retraite et transmission : un accompagnement rigoureux et des simulateurs financiers clairs pour éclairer chaque décision.",
   openGraph: {
-    title: "Brice Poitau Conseils — Structurer votre liberté financière",
+    title: "Brice Poitau Conseil — Structurer votre liberté financière",
     description:
       "Cabinet d'ingénierie patrimoniale indépendant. Épargne, immobilier, retraite et transmission.",
     url: siteUrl,
-    siteName: "Brice Poitau Conseils",
+    siteName: "Brice Poitau Conseil",
     locale: "fr_FR",
     type: "website",
   },
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "FinancialService",
-  name: "Brice Poitau Conseils",
+  name: "Brice Poitau Conseil",
   description:
     "Cabinet d'ingénierie patrimoniale indépendant, conseil en gestion de patrimoine pour particuliers.",
   url: siteUrl,

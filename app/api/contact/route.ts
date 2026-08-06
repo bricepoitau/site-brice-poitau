@@ -56,10 +56,10 @@ export async function POST(request: Request) {
   const resend = new Resend(apiKey);
 
   const { error } = await resend.emails.send({
-    from: "Brice Poitau Conseils <onboarding@resend.dev>",
+    from: "Brice Poitau Conseil <onboarding@resend.dev>",
     to: contactEmail,
     replyTo: email,
-    subject: `Nouveau message de ${name} — site Brice Poitau Conseils`,
+    subject: `Nouveau message de ${name} — site Brice Poitau Conseil`,
     text: `${message}\n\n— ${name} (${email})`,
   });
 

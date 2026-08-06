@@ -6,7 +6,7 @@ export default function Footer() {
 
   return (
     <footer className="flex flex-col gap-4 border-t border-line px-[6vw] py-10 text-[13px] text-text-muted [@media(min-width:640px)]:flex-row [@media(min-width:640px)]:items-center [@media(min-width:640px)]:justify-between">
-      <span>© {new Date().getFullYear()} Brice Poitau Conseils</span>
+      <span>© {new Date().getFullYear()} Brice Poitau Conseil</span>
       <span>
         {contactEmail}
         {contactPhone ? ` — ${contactPhone}` : ""}

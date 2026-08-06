@@ -12,7 +12,7 @@ export default function MentionsLegalesPage() {
 
         <div className="flex flex-col gap-2 text-[15px] leading-relaxed text-text-muted">
           <h2 className="text-lg font-[450] text-ink">Éditeur du site</h2>
-          <p>Brice Poitau Conseils</p>
+          <p>Brice Poitau Conseil</p>
           <p>RCS Toulouse n° 850 805 508</p>
           <p>Siège social : 4 bis rue du Pasticié, 31470 Fonsorbes</p>
           <p>Bureaux (accueil physique) : 11 bis rue Pénicaud, 33300 Bordeaux</p>
@@ -58,7 +58,7 @@ export default function MentionsLegalesPage() {
           <h2 className="text-lg font-[450] text-ink">Propriété intellectuelle</h2>
           <p>
             L&apos;ensemble des contenus présents sur ce site (textes, graphismes, logo) est la propriété
-            exclusive de Brice Poitau Conseils, sauf mention contraire, et ne peut être reproduit sans
+            exclusive de Brice Poitau Conseil, sauf mention contraire, et ne peut être reproduit sans
             autorisation préalable.
           </p>
         </div>

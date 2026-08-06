@@ -7,7 +7,7 @@ import { habilitations } from "@/content/habilitations";
 
 export const metadata: Metadata = {
   title: "Ressources",
-  description: "Partenaires, habilitations, diplômes et certifications de Brice Poitau Conseils.",
+  description: "Partenaires, habilitations, diplômes et certifications de Brice Poitau Conseil.",
 };
 
 export default function RessourcesPage() {

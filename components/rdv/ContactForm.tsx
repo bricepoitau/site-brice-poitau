@@ -11,7 +11,7 @@ export default function ContactForm() {
   const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "conseil@bricepoitau.com";
 
   function openMailto() {
-    const subject = encodeURIComponent(`Message de ${form.name} — site Brice Poitau Conseils`);
+    const subject = encodeURIComponent(`Message de ${form.name} — site Brice Poitau Conseil`);
     const bodyText = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`);
     window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${bodyText}`;
   }
