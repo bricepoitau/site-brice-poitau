@@ -10,6 +10,8 @@ const routes = [
   "/simulateurs/comparateur-contrats",
   "/simulateurs/acheter-louer",
   "/simulateurs/une-pierre-deux-coups",
+  "/simulateurs/prelevement-source",
+  "/simulateurs/mon-budget",
   "/ressources",
   "/a-propos",
   "/rdv",

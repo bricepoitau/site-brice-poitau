@@ -42,4 +42,18 @@ export const simulateurs: SimulateurEntry[] = [
     description: "Mesurer l'effet de levier du crédit sur un investissement SCPI à crédit.",
     href: "/simulateurs/une-pierre-deux-coups",
   },
+  {
+    tag: "Fiscalité",
+    title: "Prélèvement à la source",
+    description:
+      "Estimer votre taux de prélèvement à la source et le montant retenu chaque mois, selon votre situation familiale et vos revenus.",
+    href: "/simulateurs/prelevement-source",
+  },
+  {
+    tag: "Budget & pilotage",
+    title: "Mon budget mensuel",
+    description:
+      "Saisir son budget manuellement en ligne, ou télécharger l'outil complet pour importer et classer son relevé bancaire sur son ordinateur.",
+    href: "/simulateurs/mon-budget",
+  },
 ];

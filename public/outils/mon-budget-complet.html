@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mon budget mensuel — Outil complet — Brice Poitau Conseil</title>
+<meta name="description" content="Outil hors-ligne : importez votre relevé bancaire, classez vos dépenses et calculez votre reste à vivre. Rien n'est envoyé sur internet." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16212e; --ink2:#2c3644; --line:#e3dac5; --paper:#f4efe3; --card:#fbf8f1;
+    --gold:#a9843f; --gold-soft:#c9a968; --fixes:#16212e; --var:#a9843f; --cour:#2c3644; --ponc:#c9a968; --epa:#8A9297;
+    --muted:#75705f; --green:#4E8C6A; --red:#B0574A;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:#33312b;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+  .wrap{max-width:920px;margin:0 auto;padding:36px 20px 60px;}
+  .brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--line);}
+  .brand-mark{font-family:'Fraunces',Georgia,serif;font-size:19px;font-weight:600;color:var(--ink);}
+  .brand-mark span{color:var(--gold);}
+  .brand a{font-size:12px;color:var(--muted);text-decoration:none;}
+  .brand a:hover{color:var(--gold);}
+  h1{font-family:'Fraunces',Georgia,'Times New Roman',serif;font-size:30px;margin:0 0 6px;color:var(--ink);}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+  .sub{font-size:14px;color:var(--muted);max-width:640px;line-height:1.55;margin:0 0 20px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:20px;}
+  .dark{background:var(--ink);color:#fff;}
+  input,select,button{font-family:inherit;font-size:14px;}
+  .in{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--ink);outline:none;width:100%;}
+  .in:focus{border-color:var(--gold);}
+  .btn{border:none;border-radius:9px;padding:9px 14px;font-weight:600;cursor:pointer;transition:background-color .2s,color .2s;}
+  .btn-gold{background:var(--gold);color:#fff;}
+  .btn-gold:hover{background:var(--ink);}
+  .btn-ghost{background:#EFEAE0;color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--gold-soft);}
+  .btn-sm{padding:6px 11px;font-size:12px;border-radius:8px;}
+  .flex{display:flex;} .between{justify-content:space-between;} .center{align-items:center;}
+  .wrap-gap{flex-wrap:wrap;gap:12px;}
+  .muted{color:var(--muted);font-size:12px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;}
+  .drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);cursor:pointer;transition:.15s;}
+  .drop.hot{border-color:var(--gold);background:#fff;color:var(--ink);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .hide{display:none;}
+  .mapgrid{display:grid;grid-template-columns:130px 1fr;gap:8px 12px;align-items:center;margin:12px 0;}
+  .mapgrid label{font-size:13px;color:var(--muted);}
+  .grp{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:#fff;}
+  .grp.tc{background:#FFF6E9;border-color:#F0DFC0;}
+  .grp .name{font-weight:600;font-size:14px;}
+  .grp .meta{font-size:11px;color:var(--muted);}
+  .grp .amt{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;}
+  .grp select{border:1px solid var(--line);border-radius:8px;padding:7px 8px;background:#fff;font-size:12px;max-width:150px;}
+  .prog{height:10px;border-radius:6px;background:#EEE7D8;overflow:hidden;}
+  .prog>div{height:100%;background:var(--gold);transition:width .3s;}
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .toggle button{border:none;background:#fff;padding:7px 13px;cursor:pointer;font-size:13px;color:var(--muted);}
+  .toggle button.on{background:var(--ink);color:#fff;font-weight:600;}
+  .catbar{height:8px;border-radius:6px;background:#EEE7D8;overflow:hidden;margin-top:5px;}
+  .catbar>div{height:100%;}
+  .totline{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;color:rgba(255,255,255,.75);}
+  .totline b{color:#fff;font-variant-numeric:tabular-nums;}
+  .solde{font-family:'Fraunces',Georgia,serif;font-size:24px;}
+  .foot{font-size:12px;color:#8b8578;text-align:center;margin-top:8px;line-height:1.6;}
+  .hint{font-size:12px;color:var(--muted);line-height:1.5;}
+  .inc-row{border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:10px;background:#fff;}
+  .inc-top{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;}
+  @media(max-width:680px){.inc-top{grid-template-columns:1fr}}
+  .inc-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  @media(max-width:680px){.inc-fields{grid-template-columns:1fr}}
+  .inc-net{margin-top:8px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;}
+  .inc-net b{font-size:15px;}
+  .chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);}
+  .btn-x{background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;padding:6px;}
+  .privacy{background:#FFF6E9;border:1px solid #F0DFC0;border-radius:14px;padding:16px 18px;margin-bottom:24px;font-size:13px;color:#6B5A3A;line-height:1.55;}
+  @media print{.noprint{display:none!important}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand noprint">
+    <span class="brand-mark">Brice Poitau <span>Conseil</span></span>
+    <a href="https://www.bricepoitau.com">bricepoitau.com ↗</a>
+  </div>
+
+  <div class="eyebrow">Mon budget mensuel — outil complet</div>
+  <h1>Mon tableau de charges</h1>
+  <p class="sub">Importez l'export de vos opérations (idéalement <b>3 mois</b>, pour une moyenne fiable). L'outil regroupe vos dépenses par commerçant : vous classez chaque groupe <b>une seule fois</b>. Commencez par les plus gros montants en haut.</p>
+
+  <div class="privacy noprint">
+    🔒 <b>Cet outil fonctionne entièrement sur votre ordinateur.</b> Ouvert depuis un fichier local, il ne se connecte à aucun serveur pour traiter vos données : votre relevé bancaire et vos saisies ne quittent jamais votre navigateur.
+  </div>
+
+  <div class="card noprint">
+    <div class="flex between center wrap-gap">
+      <input id="clientName" class="in" style="max-width:260px" placeholder="Votre nom (optionnel)" />
+      <div class="flex" style="gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="saveLocal()">💾 Enregistrer</button>
+        <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ Imprimer / PDF</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetAll()">↺ Réinitialiser</button>
+      </div>
+    </div>
+    <p class="muted" id="saveState" style="margin:8px 0 0"></p>
+  </div>
+
+  <div class="card noprint">
+    <div class="flex between center" style="margin-bottom:10px">
+      <b>1. Importer le relevé</b><span class="muted">CSV (séparateur ; ou ,)</span>
+    </div>
+    <div id="drop" class="drop">Glissez votre fichier ici (CSV ou Excel .xlsx), ou cliquez pour le choisir
+      <input id="file" type="file" accept=".csv,.txt,.xlsx,.xls" class="hide" />
+    </div>
+    <div class="muted" style="text-align:center;margin:10px 0">— ou —</div>
+    <details>
+      <summary style="cursor:pointer;font-size:13px;color:var(--gold);font-weight:600">Coller directement depuis Excel</summary>
+      <div class="hint" style="margin:8px 0">Dans Excel : sélectionnez vos lignes (gardez la ligne d'en-tête), copiez (Ctrl+C / Cmd+C), puis collez ci-dessous.</div>
+      <textarea id="pasteBox" class="in" rows="5" placeholder="Collez ici vos opérations, avec la ligne d'en-tête…"></textarea>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="ingestPaste()">Analyser le texte collé</button>
+    </details>
+    <div id="mapPanel" class="hide" style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
+      <b>Vérifiez les colonnes</b>
+      <div class="hint">L'outil a deviné les colonnes. Corrigez si besoin, puis validez.</div>
+      <div class="mapgrid">
+        <label>Date</label><select id="mapDate" class="in"></select>
+        <label>Libellé</label><select id="mapLabel" class="in"></select>
+        <label>Type de montant</label>
+        <select id="mapMode" class="in" onchange="renderAmountMapping()">
+          <option value="single">Une colonne (montant signé)</option>
+          <option value="split">Deux colonnes (Débit / Crédit)</option>
+        </select>
+        <div id="singleWrap" style="display:contents"><label>Colonne montant</label><select id="mapAmount" class="in"></select></div>
+        <div id="splitWrap" style="display:none">
+          <label>Colonne Débit</label><select id="mapDebit" class="in"></select>
+          <label>Colonne Crédit</label><select id="mapCredit" class="in"></select>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-sm" onclick="applyImport()">Importer</button>
+      <span id="mapInfo" class="muted" style="margin-left:10px"></span>
+    </div>
+  </div>
+
+  <div id="periodCard" class="card hide noprint">
+    <div class="flex between center wrap-gap">
+      <div><b id="periodTxt"></b><div class="hint" id="periodHint"></div></div>
+      <div class="toggle">
+        <button id="btnAvg" class="on" onclick="setView('avg')">Moyenne / mois</button>
+        <button id="btnTot" onclick="setView('tot')">Total période</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card dark">
+    <div class="flex between center wrap-gap">
+      <div>
+        <div style="font-size:14px;color:rgba(255,255,255,.8)">Revenus nets mensuels du foyer</div>
+        <div class="muted" style="color:rgba(255,255,255,.5)">Pré-rempli depuis les crédits détectés (moyenne/mois) — ajustez si besoin, ou utilisez la calculette ci-dessous</div>
+      </div>
+      <input id="revenus" type="number" class="in" style="max-width:180px;text-align:right;background:var(--ink2);color:#fff;border-color:#3A4A57" placeholder="0" oninput="recompute()" />
+    </div>
+  </div>
+
+  <div class="card noprint" id="calcCard">
+    <div class="flex between center wrap-gap" style="margin-bottom:4px">
+      <b>Calculette revenus (optionnel)</b>
+      <span class="muted">Estimation à taux forfaitaires — pas une fiche de paie</span>
+    </div>
+    <p class="hint" style="margin:4px 0 12px">Ajoutez une ligne par source de revenu (salaire, indépendant…) : l'outil estime le net mensuel et vous pouvez reporter le total dans le champ ci-dessus.</p>
+    <div id="incomeLines"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addIncomeLine()">+ Ajouter un revenu</button>
+    <div class="flex between center wrap-gap" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
+      <div>Total estimé : <b id="incomeTotal">0 €</b> / mois</div>
+      <button class="btn btn-gold btn-sm" onclick="applyIncomeTotal()">Utiliser ce total ↑</button>
+    </div>
+    <p class="hint" style="margin-top:10px">Taux forfaitaires utilisés : charges salariales ≈ 22 % (non-cadre) / 25 % (cadre) du brut · cotisations sociales micro-entreprise ≈ 21,1 % du CA (BNC), 12,3 % (BIC vente), 21,2 % (BIC prestations). Ce sont des ordres de grandeur : à affiner avec votre expert-comptable ou votre conseiller pour un chiffre exact.</p>
+  </div>
+
+  <div class="card">
+    <div class="flex between center" style="margin-bottom:10px">
+      <b>2. Classez vos dépenses</b>
+      <span class="muted" id="grpCount"></span>
+    </div>
+    <div id="progWrap" class="hide" style="margin-bottom:14px">
+      <div class="flex between" style="font-size:12px;margin-bottom:5px">
+        <span class="muted" id="progLabel"></span>
+      </div>
+      <div class="prog"><div id="progBar" style="width:0%"></div></div>
+    </div>
+    <div id="bulkWrap" class="hide noprint" style="margin-bottom:12px;padding:10px;background:#F3EEE2;border-radius:10px">
+      <span class="hint">Pas envie de tout classer ? Envoyez toutes les lignes restantes vers :</span>
+      <div class="flex" style="gap:8px;margin-top:7px">
+        <select id="bulkCat" class="in" style="max-width:220px"></select>
+        <button class="btn btn-ghost btn-sm" onclick="bulkAssign()">Appliquer au reste</button>
+      </div>
+    </div>
+    <div id="groups"></div>
+    <p class="muted" id="emptyMsg">Aucune dépense pour l'instant. Importez un relevé.</p>
+  </div>
+
+  <div class="card noprint" id="manualCard">
+    <div class="flex between center wrap-gap" style="margin-bottom:4px">
+      <b>3. Ajouter des dépenses à la main (optionnel)</b>
+    </div>
+    <p class="hint" style="margin:4px 0 12px">Utile pour les charges que vous ne retrouvez pas dans le relevé importé (ex : loyer payé hors banque, pension versée, budget prévisionnel…). Saisissez un montant <b>mensuel</b>.</p>
+    <div class="inc-top" style="grid-template-columns:140px 1fr 130px auto;margin-bottom:10px">
+      <select id="manCat" class="in">
+        <option value="fixes">Charges fixes</option>
+        <option value="variables">Charges variables</option>
+        <option value="courantes">Charges courantes</option>
+        <option value="ponctuelles">Charges ponctuelles</option>
+      </select>
+      <input id="manLabel" class="in" placeholder="Libellé (ex : Loyer)">
+      <input id="manAmount" class="in" type="number" min="0" placeholder="€ / mois">
+      <button class="btn btn-gold btn-sm" onclick="addManual()">+ Ajouter</button>
+    </div>
+    <div id="manualList"></div>
+    <p class="muted" id="manualEmpty" style="margin:6px 0 0">Aucune dépense saisie à la main.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <b>Répartition <span class="muted" id="sumScope"></span></b>
+      <div style="display:flex;gap:18px;align-items:center;margin-top:12px">
+        <svg id="donut" width="150" height="150" viewBox="0 0 42 42"></svg>
+        <div id="legend" style="flex:1"></div>
+      </div>
+    </div>
+    <div class="card dark" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="totline"><span>Total charges <span id="scope1" style="opacity:.6"></span></span><b id="tCharges">0 €</b></div>
+      <div class="totline"><span>Revenus /mois</span><b id="tRev">0 €</b></div>
+      <div class="totline"><span>Épargne déjà mise de côté</span><b id="tEpa">0 €</b></div>
+      <div style="height:1px;background:#3A4A57;margin:6px 0 14px"></div>
+      <div class="flex between center">
+        <span style="font-size:14px;color:rgba(255,255,255,.8)">Reste à vivre / mois</span>
+        <span id="solde" class="solde">0 €</span>
+      </div>
+      <div class="muted" id="savingRate" style="color:rgba(255,255,255,.6);margin-top:8px"></div>
+    </div>
+  </div>
+
+  <p class="foot">Étape 1 : visibilité sur les charges.<br>La capacité d'épargne, le patrimoine net et les objectifs se travaillent ensuite avec votre conseiller — <a href="https://www.bricepoitau.com/rdv" style="color:#8b8578">prendre rendez-vous ↗</a>.</p>
+</div>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script>
+const CATS = {
+  fixes:      {label:"Charges fixes",      color:"var(--fixes)", charge:true},
+  variables:  {label:"Charges variables",  color:"var(--var)", charge:true},
+  courantes:  {label:"Charges courantes",  color:"var(--cour)", charge:true},
+  ponctuelles:{label:"Charges ponctuelles",color:"var(--ponc)", charge:true},
+  epargne:    {label:"Épargne / virements internes (exclu)", color:"var(--epa)", charge:false},
+};
+const CHARGE_KEYS=["fixes","variables","courantes","ponctuelles"];
+const ALL_KEYS=Object.keys(CATS);
+const RULES = {
+  fixes:    ["LOYER","CREDIT IMMO","PRET","EMPRUNT","ASSURANCE","EDF","ENGIE","TOTALENERGIES","ORANGE","SFR","FREE","BOUYGUES","SOSH","RED BY","INTERNET","ABONNEMENT","NETFLIX","SPOTIFY","DEEZER","CANAL","VEOLIA","SUEZ","IMPOT","FONCIER","CRECHE","NOUNOU","ICLOUD","GOOGLE ONE"],
+  variables:["CARREFOUR","LECLERC","LIDL","ALDI","AUCHAN","INTERMARCHE","MONOPRIX","CASINO","FRANPRIX","SUPER U","HYPER U","BIOCOOP","TOTAL","ESSO","SHELL","AVIA","ESSENCE","STATION","UBER","BOLT","SNCF","BLABLA","RESTAURANT","RESTO","MCDO","BURGER","KEBAB","BOULANGERIE","AMAZON","FNAC","DARTY","DECATHLON","ZARA","SEPHORA","CAFE","TABAC"],
+  courantes:["PHARMACIE","DOCTEUR","MEDECIN","LABORATOIRE","MUTUELLE","DENTISTE","OPTIC","GARAGE","CONTROLE TECH","VETERINAIRE","COIFFEUR","PRESSING"],
+  ponctuelles:[],
+  epargne:["LIVRET","LDDS","LEP","EPARGNE","PEA","ASSURANCE VIE","BOURSORAMA","TRADE REPUBLIC","VERSEMENT PROGRAMME"]
+};
+
+// --- Calculette revenus : taux forfaitaires (ordres de grandeur, à ajuster) ---
+const INC_RATES = {
+  netMensuel:{},
+  brutAnnuel:{ cadre:0.75, nonCadre:0.78 }, // part du brut annuel qui devient du net mensuel
+  bnc:{ cotis:0.211 },       // profession libérale (BNC micro)
+  bicVente:{ cotis:0.123 },  // achat-revente / vente de marchandises (BIC micro)
+  bicService:{ cotis:0.212 },// prestations de services (BIC micro)
+  autre:{}
+};
+
+let TX=[], GROUPS=[], MEM={}, months=1, viewMode="avg";
+let mapHeaders=[], mapRows=[], uid=1;
+let INCOME=[], incUid=1;
+let MANUAL=[], manUid=1;
+const STORE="bpc_budget_complet_v1", MEMSTORE="bpc_budget_complet_mem_v1";
+const fmt=n=>(Number(n)||0).toLocaleString("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+const div=v=>viewMode==="avg"?v/months:v;
+
+function detectDelim(t){const f=t.split(/\r?\n/)[0]||"";const c=(f.match(/,/g)||[]).length,s=(f.match(/;/g)||[]).length,tb=(f.match(/\t/g)||[]).length;if(s>=c&&s>=tb)return";";if(tb>c)return"\t";return",";}
+function parseCSV(text,d){const rows=[];let row=[],cur="",q=false;for(let i=0;i<text.length;i++){const ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}else{if(ch==='"')q=true;else if(ch===d){row.push(cur);cur="";}else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur="";}else if(ch==='\r'){}else cur+=ch;}}if(cur.length||row.length){row.push(cur);rows.push(row);}return rows.filter(r=>r.some(c=>c.trim()!==""));}
+function parseAmount(s){if(s==null)return NaN;s=String(s).replace(/[  \s]/g,"").replace(/€|EUR/gi,"");const neg=/^-/.test(s)||/^\(.*\)$/.test(s);s=s.replace(/[()]/g,"").replace(/-/g,"");s=s.replace(/\./g,s.indexOf(",")>-1?"":".").replace(",",".");let v=parseFloat(s);return isNaN(v)?NaN:(neg?-v:v);}
+function guessCol(h,ps){for(let p of ps){const i=h.findIndex(x=>p.test(x));if(i>-1)return i;}return -1;}
+function ym(s){s=(s||"").trim();let m=s.match(/^(\d{4})[\/.\-](\d{2})[\/.\-]\d{2}/);if(m)return m[1]+"-"+m[2];m=s.match(/(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/);if(m){let y=m[3];if(y.length===2)y="20"+y;return y+"-"+String(m[2]).padStart(2,"0");}return null;}
+
+function merchantKey(label){
+  let s=label.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  s=s.replace(/\b(PAIEMENT|PAIMENT|ACHAT|CARTE|CB|PRLV|PRELEVEMENT|PRELV|SEPA|VIREMENT|VIRT|VIR|RETRAIT|DAB|GAB|FACTURE|FACT|COTISATION|ECHEANCE|ECH|REMISE|CHEQUE|CHQ|WEB|INTERNET|RECU|EMIS|DU|LE|DE|DES|SARL|SAS)\b/g," ");
+  s=s.replace(/\b\d{1,2}[\/.\-]\d{1,2}([\/.\-]\d{2,4})?\b/g," ");
+  s=s.replace(/\b\d{3,}\b/g," ");
+  s=s.replace(/[^A-Z0-9 &]/g," ").replace(/\s+/g," ").trim();
+  const w=s.split(" ").filter(x=>x.length>1);
+  return w.slice(0,2).join(" ")||label.toUpperCase().slice(0,14);
+}
+function autoCat(key){const L=key.toUpperCase();for(let k of ALL_KEYS){if((RULES[k]||[]).some(w=>L.includes(w)))return k;}return "";}
+
+const drop=document.getElementById("drop"),fileInput=document.getElementById("file");
+drop.onclick=()=>fileInput.click();
+["dragover","dragenter"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add("hot");}));
+["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("hot");}));
+drop.addEventListener("drop",ev=>{if(ev.dataTransfer.files[0])readFile(ev.dataTransfer.files[0]);});
+fileInput.onchange=()=>{if(fileInput.files[0])readFile(fileInput.files[0]);};
+function readFile(f){
+  const name=(f.name||"").toLowerCase();
+  if(name.endsWith(".xlsx")||name.endsWith(".xls")){
+    if(typeof XLSX==="undefined"){alert("Le lecteur Excel n'a pas pu se charger (connexion internet requise pour cette fonction). Utilisez plutôt le lien publié, ou collez le texte, ou exportez en CSV.");return;}
+    const r=new FileReader();
+    r.onload=()=>{try{
+      const wb=XLSX.read(new Uint8Array(r.result),{type:"array"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:""});
+      ingestRows(rows);
+    }catch(e){alert("Fichier Excel illisible : "+e.message);}};
+    r.readAsArrayBuffer(f);
+  } else {
+    const r=new FileReader();
+    r.onload=()=>ingestRows(parseCSV(r.result,detectDelim(r.result)));
+    r.readAsText(f,"UTF-8");
+  }
+}
+function ingestPaste(){
+  const t=document.getElementById("pasteBox").value;
+  if(!t.trim()){alert("Collez d'abord vos opérations dans la zone.");return;}
+  ingestRows(parseCSV(t,detectDelim(t)));
+}
+function ingestRows(rows){
+  rows=(rows||[]).filter(r=>r.some(c=>String(c).trim()!==""));
+  if(rows.length<2){alert("Données illisibles ou vides (il faut au moins une ligne d'en-tête + une ligne d'opération).");return;}
+  let hIdx=0;for(let i=0;i<Math.min(rows.length,8);i++){if(rows[i].filter(c=>String(c).trim()&&isNaN(parseAmount(c))).length>=2){hIdx=i;break;}}
+  mapHeaders=rows[hIdx].map(h=>String(h).trim());
+  mapRows=rows.slice(hIdx+1).map(r=>r.map(c=>String(c)));
+  const opts=mapHeaders.map((h,i)=>`<option value="${i}">${h||("Colonne "+(i+1))}</option>`).join("");
+  ["mapDate","mapLabel","mapAmount","mapDebit","mapCredit"].forEach(id=>document.getElementById(id).innerHTML=opts);
+  const H=mapHeaders.map(h=>h.toUpperCase());
+  document.getElementById("mapDate").value=Math.max(0,guessCol(H,[/DATE.*OP/,/DATE/]));
+  document.getElementById("mapLabel").value=Math.max(0,guessCol(H,[/LIBELL/,/NATURE/,/OP[EÉ]RATION/,/D[EÉ]TAIL/,/DESIGNATION/]));
+  const iDeb=guessCol(H,[/D[EÉ]BIT/]),iCred=guessCol(H,[/CR[EÉ]DIT/]),iMont=guessCol(H,[/MONTANT/,/AMOUNT/]);
+  if(iDeb>-1&&iCred>-1){document.getElementById("mapMode").value="split";document.getElementById("mapDebit").value=iDeb;document.getElementById("mapCredit").value=iCred;}
+  else{document.getElementById("mapMode").value="single";document.getElementById("mapAmount").value=Math.max(0,iMont);}
+  renderAmountMapping();
+  document.getElementById("mapInfo").textContent=`${mapRows.length} lignes détectées`;
+  document.getElementById("mapPanel").classList.remove("hide");
+}
+function renderAmountMapping(){const sp=document.getElementById("mapMode").value==="split";document.getElementById("singleWrap").style.display=sp?"none":"contents";document.getElementById("splitWrap").style.display=sp?"contents":"none";}
+function applyImport(){
+  const iD=+document.getElementById("mapDate").value,iL=+document.getElementById("mapLabel").value;
+  const sp=document.getElementById("mapMode").value==="split";
+  const iA=+document.getElementById("mapAmount").value,iDe=+document.getElementById("mapDebit").value,iC=+document.getElementById("mapCredit").value;
+  let credits=0,mset={};
+  mapRows.forEach(r=>{
+    const raw=(r[iL]||"").trim();if(!raw)return;
+    let amt;
+    if(sp){const d=parseAmount(r[iDe]),c=parseAmount(r[iC]);amt=!isNaN(d)&&d!==0?-Math.abs(d):(!isNaN(c)?Math.abs(c):NaN);}
+    else amt=parseAmount(r[iA]);
+    if(isNaN(amt)||amt===0)return;
+    const m=ym(r[iD]);if(m)mset[m]=1;
+    if(amt>0){credits+=amt;return;}
+    TX.push({id:uid++,ym:m,raw,key:merchantKey(raw),amount:amt});
+  });
+  months=Math.max(1,Object.keys(mset).length);
+  buildGroups();
+  if(credits>0&&!document.getElementById("revenus").value)
+    document.getElementById("revenus").value=Math.round(credits/months);
+  document.getElementById("mapPanel").classList.add("hide");
+  document.getElementById("file").value="";
+  document.getElementById("periodCard").classList.remove("hide");
+  document.getElementById("periodTxt").textContent=`${months} mois détecté${months>1?"s":""} · ${TX.length} dépenses regroupées en ${GROUPS.length} commerçants`;
+  document.getElementById("periodHint").textContent=months>1?"Affichage en moyenne mensuelle (recommandé pour un budget).":"Un seul mois détecté.";
+  renderGroups();recompute();saveLocal(true);
+}
+
+function buildGroups(){
+  const map={};
+  TX.forEach(t=>{
+    if(!map[t.key])map[t.key]={key:t.key,count:0,total:0,cat:(t.key in MEM)?MEM[t.key]:autoCat(t.key)};
+    map[t.key].count++;map[t.key].total+=Math.abs(t.amount);
+  });
+  GROUPS=Object.values(map).sort((a,b)=>b.total-a.total);
+}
+function setGroupCat(key,cat){
+  const g=GROUPS.find(x=>x.key===key);if(!g)return;
+  g.cat=cat;
+  if(cat)MEM[key]=cat;else delete MEM[key];
+  saveMem();renderGroups();recompute();saveLocal(true);
+}
+function bulkAssign(){
+  const cat=document.getElementById("bulkCat").value;if(!cat)return;
+  GROUPS.forEach(g=>{if(!g.cat){g.cat=cat;MEM[g.key]=cat;}});
+  saveMem();renderGroups();recompute();saveLocal(true);
+}
+function renderGroups(){
+  const has=GROUPS.length>0;
+  document.getElementById("emptyMsg").style.display=has?"none":"block";
+  document.getElementById("progWrap").classList.toggle("hide",!has);
+  document.getElementById("bulkWrap").classList.toggle("hide",!has);
+  document.getElementById("grpCount").textContent=has?`${GROUPS.length} commerçants`:"";
+  const sorted=[...GROUPS].sort((a,b)=>(a.cat?1:0)-(b.cat?1:0)||b.total-a.total);
+  const catOpts=g=>`<option value="">— À classer —</option>`+ALL_KEYS.map(k=>`<option value="${k}" ${g.cat===k?"selected":""}>${CATS[k].label}</option>`).join("");
+  document.getElementById("groups").innerHTML=sorted.map(g=>`
+    <div class="grp ${g.cat?"":"tc"}">
+      <div style="min-width:0">
+        <div class="name">${esc(g.key)}</div>
+        <div class="meta">${g.count} opération${g.count>1?"s":""}${g.cat?"":" · à classer"}</div>
+      </div>
+      <select onchange="setGroupCat('${esc(g.key).replace(/'/g,"&#39;")}',this.value)">${catOpts(g)}</select>
+      <div class="amt">${fmt(div(g.total))}${viewMode==="avg"?'<div class="meta" style="font-weight:400">/mois</div>':''}</div>
+    </div>`).join("");
+  document.getElementById("bulkCat").innerHTML=`<option value="">Choisir…</option>`+ALL_KEYS.map(k=>`<option value="${k}">${CATS[k].label}</option>`).join("");
+  let totAll=0;GROUPS.forEach(g=>totAll+=g.total);
+  const unclA=GROUPS.filter(g=>!g.cat).reduce((s,g)=>s+g.total,0);
+  const pct=totAll>0?Math.round((totAll-unclA)/totAll*100):0;
+  document.getElementById("progBar").style.width=pct+"%";
+  document.getElementById("progLabel").textContent=`${pct}% de vos dépenses classées`+(unclA>0?` · reste ${fmt(div(unclA))} à classer`:" ✓");
+}
+function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+
+// ================= Dépenses saisies à la main =================
+function addManual(){
+  const cat=document.getElementById("manCat").value;
+  const label=document.getElementById("manLabel").value.trim();
+  const amount=Number(document.getElementById("manAmount").value)||0;
+  if(!label){alert("Ajoutez un libellé pour cette dépense.");return;}
+  if(amount<=0){alert("Indiquez un montant mensuel supérieur à 0.");return;}
+  MANUAL.push({id:manUid++, cat, label, amount});
+  document.getElementById("manLabel").value="";
+  document.getElementById("manAmount").value="";
+  renderManualList();recompute();saveLocal(true);
+}
+function removeManual(id){
+  MANUAL=MANUAL.filter(m=>m.id!==id);
+  renderManualList();recompute();saveLocal(true);
+}
+function updateManual(id,field,value){
+  const m=MANUAL.find(x=>x.id===id);if(!m)return;
+  m[field]=field==="amount"?(Number(value)||0):value;
+  renderManualList();recompute();saveLocal(true);
+}
+function renderManualList(){
+  const has=MANUAL.length>0;
+  document.getElementById("manualEmpty").style.display=has?"none":"block";
+  const catOpts=m=>CHARGE_KEYS.map(k=>`<option value="${k}" ${m.cat===k?"selected":""}>${CATS[k].label}</option>`).join("");
+  document.getElementById("manualList").innerHTML=MANUAL.map(m=>`
+    <div class="grp">
+      <select style="max-width:150px" onchange="updateManual(${m.id},'cat',this.value)">${catOpts(m)}</select>
+      <input class="in" style="max-width:220px" value="${esc(m.label)}" oninput="updateManual(${m.id},'label',this.value)">
+      <input class="in" style="max-width:110px;text-align:right" type="number" min="0" value="${esc(m.amount)}" oninput="updateManual(${m.id},'amount',this.value)">
+      <span class="muted">/mois</span>
+      <button class="btn-x" onclick="removeManual(${m.id})" title="Supprimer" style="margin-left:auto">✕</button>
+    </div>`).join("");
+}
+
+function setView(m){viewMode=m;
+  document.getElementById("btnAvg").classList.toggle("on",m==="avg");
+  document.getElementById("btnTot").classList.toggle("on",m==="tot");
+  document.getElementById("sumScope").textContent=m==="avg"?"(moyenne / mois)":"(total période)";
+  document.getElementById("scope1").textContent=m==="avg"?"/mois":"période";
+  renderGroups();recompute();saveLocal(true);
+}
+
+function manualScale(v){return viewMode==="avg"?v:v*months;}
+function recompute(){
+  const byCatImp={fixes:0,variables:0,courantes:0,ponctuelles:0};let chargesImp=0,epa=0;
+  GROUPS.forEach(g=>{if(g.cat==="epargne")epa+=g.total;else if(CATS[g.cat]&&CATS[g.cat].charge){byCatImp[g.cat]+=g.total;chargesImp+=g.total;}});
+  const byCatV={fixes:0,variables:0,courantes:0,ponctuelles:0};
+  CHARGE_KEYS.forEach(k=>byCatV[k]=div(byCatImp[k]));
+  let chargesManual=0;
+  MANUAL.forEach(m=>{const v=manualScale(Number(m.amount)||0);if(CHARGE_KEYS.includes(m.cat)){byCatV[m.cat]+=v;chargesManual+=v;}});
+  const chargesV=div(chargesImp)+chargesManual,epaV=div(epa);
+  const rev=Number(document.getElementById("revenus").value)||0;
+  const revV=viewMode==="avg"?rev:rev*months;
+  const solde=revV-chargesV;
+  document.getElementById("tCharges").textContent=fmt(chargesV);
+  document.getElementById("tRev").textContent=fmt(revV);
+  document.getElementById("tEpa").textContent=fmt(epaV);
+  const s=document.getElementById("solde");s.textContent=fmt(solde);s.style.color=solde>=0?"#8FBF9F":"#D98B85";
+  document.getElementById("savingRate").textContent=revV>0?`Capacité d'épargne potentielle : ${Math.round(solde/revV*100)} %`+(epaV>0?` (dont ${fmt(epaV)} déjà épargnés)`:""):"";
+  drawDonut(byCatV,chargesV);drawLegend(byCatV,chargesV);
+}
+function drawDonut(byCatV,total){
+  const svg=document.getElementById("donut");svg.innerHTML="";
+  const cx=21,cy=21,r=15.9155,C=2*Math.PI*r;
+  if(total<=0){svg.innerHTML=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#EEE7D8" stroke-width="6"/>`;return;}
+  let off=25;
+  CHARGE_KEYS.forEach(k=>{const v=byCatV[k];if(v<=0)return;const len=v/total*C;
+    svg.innerHTML+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--'+({fixes:'fixes',variables:'var',courantes:'cour',ponctuelles:'ponc'}[k])).trim()}" stroke-width="6" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${off}" transform="rotate(-90 ${cx} ${cy})"/>`;off-=len;});
+}
+function drawLegend(byCatV,total){
+  const colorVar={fixes:'--fixes',variables:'--var',courantes:'--cour',ponctuelles:'--ponc'};
+  document.getElementById("legend").innerHTML=CHARGE_KEYS.map(k=>{const v=byCatV[k],pct=total>0?Math.round(v/total*100):0;
+    return `<div style="margin-bottom:9px"><div class="flex between" style="font-size:12px"><span><span class="dot" style="background:var(${colorVar[k]})"></span>${CATS[k].label}</span><b>${fmt(v)} <span class="muted">(${pct}%)</span></b></div><div class="catbar"><div style="width:${pct}%;background:var(${colorVar[k]})"></div></div></div>`;}).join("");
+}
+
+// ================= Calculette revenus =================
+const INC_TYPES = {
+  netMensuel:  "Salaire net mensuel",
+  brutAnnuel:  "Salaire brut annuel",
+  bnc:         "Indépendant — BNC (profession libérale)",
+  bicVente:    "Indépendant — BIC (achat-revente)",
+  bicService:  "Indépendant — BIC (prestations de service)",
+  autre:       "Autre revenu net mensuel (pension, rente…)"
+};
+
+function addIncomeLine(){
+  INCOME.push({id:incUid++, label:"", type:"netMensuel", amount:"", statut:"nonCadre", period:"annuel", deduct:true});
+  renderIncomeLines();computeIncomeTotal();saveLocal(true);
+}
+function removeIncomeLine(id){
+  INCOME=INCOME.filter(l=>l.id!==id);
+  renderIncomeLines();computeIncomeTotal();saveLocal(true);
+}
+function updateIncomeLine(id,field,value){
+  const l=INCOME.find(x=>x.id===id);if(!l)return;
+  l[field]=value;
+  if(field==="type")renderIncomeLines(); // champs conditionnels changent
+  computeIncomeTotal();saveLocal(true);
+}
+function lineNetMonthly(l){
+  const amt=Number(l.amount)||0;
+  if(amt<=0)return 0;
+  switch(l.type){
+    case "netMensuel": return amt;
+    case "autre": return amt;
+    case "brutAnnuel": {
+      const taux=INC_RATES.brutAnnuel[l.statut==="cadre"?"cadre":"nonCadre"];
+      return (amt*taux)/12;
+    }
+    case "bnc": case "bicVente": case "bicService": {
+      const monthlyCA = l.period==="annuel" ? amt/12 : amt;
+      const cotisRate = INC_RATES[l.type].cotis;
+      const cotis = l.deduct===false ? 0 : monthlyCA*cotisRate;
+      return monthlyCA - cotis;
+    }
+    default: return 0;
+  }
+}
+function renderIncomeLines(){
+  const wrap=document.getElementById("incomeLines");
+  wrap.innerHTML = INCOME.map(l=>{
+    const net = lineNetMonthly(l);
+    let fields="";
+    if(l.type==="netMensuel"||l.type==="autre"){
+      fields = `<div class="inc-fields">
+        <div><label class="hint">Montant net (€ / mois)</label>
+        <input class="in" type="number" min="0" value="${esc(l.amount)}" oninput="updateIncomeLine(${l.id},'amount',this.value)"></div>
+      </div>`;
+    } else if(l.type==="brutAnnuel"){
+      fields = `<div class="inc-fields">
+        <div><label class="hint">Brut annuel avant impôt (€ / an)</label>
+        <input class="in" type="number" min="0" value="${esc(l.amount)}" oninput="updateIncomeLine(${l.id},'amount',this.value)"></div>
+        <div><label class="hint">Statut</label>
+        <select class="in" onchange="updateIncomeLine(${l.id},'statut',this.value)">
+          <option value="nonCadre" ${l.statut!=="cadre"?"selected":""}>Non-cadre</option>
+          <option value="cadre" ${l.statut==="cadre"?"selected":""}>Cadre</option>
+        </select></div>
+      </div>`;
+    } else if(l.type==="bnc"||l.type==="bicVente"||l.type==="bicService"){
+      fields = `<div class="inc-fields">
+        <div><label class="hint">Chiffre d'affaires</label>
+        <input class="in" type="number" min="0" value="${esc(l.amount)}" oninput="updateIncomeLine(${l.id},'amount',this.value)"></div>
+        <div><label class="hint">Période</label>
+        <select class="in" onchange="updateIncomeLine(${l.id},'period',this.value)">
+          <option value="annuel" ${l.period!=="mensuel"?"selected":""}>Par an</option>
+          <option value="mensuel" ${l.period==="mensuel"?"selected":""}>Par mois</option>
+        </select></div>
+      </div>
+      <label class="chk" style="margin-top:8px">
+        <input type="checkbox" ${l.deduct!==false?"checked":""} onchange="updateIncomeLine(${l.id},'deduct',this.checked)">
+        Déduire les cotisations sociales (URSSAF) du montant affiché
+      </label>`;
+    }
+    return `<div class="inc-row">
+      <div class="inc-top">
+        <input class="in" placeholder="Libellé (ex : salaire de Julie)" value="${esc(l.label)}" oninput="updateIncomeLine(${l.id},'label',this.value)">
+        <select class="in" onchange="updateIncomeLine(${l.id},'type',this.value)">
+          ${Object.entries(INC_TYPES).map(([k,v])=>`<option value="${k}" ${l.type===k?"selected":""}>${v}</option>`).join("")}
+        </select>
+        <button class="btn-x" onclick="removeIncomeLine(${l.id})" title="Supprimer">✕</button>
+      </div>
+      ${fields}
+      <div class="inc-net">Net estimé : <b>${fmt(net)}</b> / mois</div>
+    </div>`;
+  }).join("");
+}
+function computeIncomeTotal(){
+  const total = INCOME.reduce((s,l)=>s+lineNetMonthly(l),0);
+  document.getElementById("incomeTotal").textContent = fmt(total);
+  return total;
+}
+function applyIncomeTotal(){
+  const total = computeIncomeTotal();
+  document.getElementById("revenus").value = Math.round(total);
+  recompute();saveLocal();
+  flash("Total reporté dans le champ revenus ✓");
+}
+
+function saveMem(){try{localStorage.setItem(MEMSTORE,JSON.stringify(MEM));}catch(e){}}
+function loadMem(){try{MEM=JSON.parse(localStorage.getItem(MEMSTORE))||{};}catch(e){MEM={};}}
+function saveLocal(silent){try{localStorage.setItem(STORE,JSON.stringify({client:document.getElementById("clientName").value,revenus:document.getElementById("revenus").value,tx:TX,groups:GROUPS,months,viewMode,uid,income:INCOME,incUid,manual:MANUAL,manUid}));if(!silent)flash("Enregistré sur cet ordinateur ✓");}catch(e){if(!silent)flash("Sauvegarde impossible (mode privé ?)");}}
+function loadLocal(){try{const d=JSON.parse(localStorage.getItem(STORE));if(!d)return;document.getElementById("clientName").value=d.client||"";document.getElementById("revenus").value=d.revenus||"";TX=d.tx||[];GROUPS=d.groups||[];months=d.months||1;viewMode=d.viewMode||"avg";uid=d.uid||(TX.length+1);INCOME=d.income||[];incUid=d.incUid||(INCOME.length+1);MANUAL=d.manual||[];manUid=d.manUid||(MANUAL.length+1);if(GROUPS.length){document.getElementById("periodCard").classList.remove("hide");document.getElementById("periodTxt").textContent=`${months} mois · ${TX.length} dépenses · ${GROUPS.length} commerçants`;setView(viewMode);}}catch(e){}}
+function resetAll(){if(!confirm("Effacer les données saisies ? (la mémoire des commerçants est conservée)"))return;localStorage.removeItem(STORE);TX=[];GROUPS=[];months=1;INCOME=[];MANUAL=[];document.getElementById("clientName").value="";document.getElementById("revenus").value="";document.getElementById("periodCard").classList.add("hide");renderGroups();renderIncomeLines();computeIncomeTotal();renderManualList();recompute();}
+let flashT;function flash(m){const el=document.getElementById("saveState");el.textContent=m;clearTimeout(flashT);flashT=setTimeout(()=>el.textContent="",2500);}
+
+loadMem();loadLocal();renderGroups();renderIncomeLines();computeIncomeTotal();renderManualList();recompute();
+</script>
+</body>
+</html>

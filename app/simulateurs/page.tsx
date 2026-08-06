@@ -6,7 +6,7 @@ import { simulateurs } from "@/lib/simulateurs/catalogue";
 export const metadata: Metadata = {
   title: "Simulateurs financiers",
   description:
-    "Assurance vie, SCPI, PER, comparateur de contrats, acheter ou louer, SCPI à crédit : des simulateurs pour visualiser l'impact de chaque stratégie patrimoniale.",
+    "Assurance vie, SCPI, PER, comparateur de contrats, acheter ou louer, SCPI à crédit, prélèvement à la source, budget mensuel : des simulateurs pour visualiser l'impact de chaque stratégie patrimoniale.",
 };
 
 export default function SimulateursPage() {
