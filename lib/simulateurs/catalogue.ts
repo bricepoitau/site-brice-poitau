@@ -23,6 +23,7 @@ export const simulateurs: SimulateurEntry[] = [
     title: "PER",
     description:
       "Anticiper l'effort d'épargne nécessaire et l'économie d'impôt associée au Plan Épargne Retraite.",
+    href: "/simulateurs/per",
   },
   {
     tag: "Frais & contrats",

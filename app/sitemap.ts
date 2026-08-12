@@ -7,6 +7,7 @@ const routes = [
   "/simulateurs",
   "/simulateurs/assurance-vie",
   "/simulateurs/scpi",
+  "/simulateurs/per",
   "/simulateurs/comparateur-contrats",
   "/simulateurs/acheter-louer",
   "/simulateurs/une-pierre-deux-coups",
