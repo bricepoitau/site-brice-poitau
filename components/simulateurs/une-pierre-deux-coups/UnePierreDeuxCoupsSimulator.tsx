@@ -102,7 +102,11 @@ export default function UnePierreDeuxCoupsSimulator() {
             part d&apos;intérêts (déductible du revenu foncier) diminue au fil du remboursement tandis que la
             part de capital (non déductible) augmente. Le revenu foncier imposable progresse donc mécaniquement,
             l&apos;impôt dû aussi — ce qui réduit le revenu net perçu, même si la mensualité et le rendement
-            SCPI restent fixes.
+            SCPI restent fixes. Si les intérêts dépassent le loyer brut en début de crédit, le déficit foncier
+            créé est imputable sur le revenu global (dans la limite de 10 750 €/an) puis reporté sur vos revenus
+            fonciers des 10 années suivantes — ce report est bien pris en compte dans la simulation et peut
+            temporairement stabiliser l&apos;effort, avant que la hausse ne reprenne une fois le déficit reporté
+            consommé.
           </p>
         </div>
         <div className="max-h-[520px] overflow-y-auto overflow-x-auto">
