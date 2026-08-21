@@ -34,7 +34,7 @@ export interface UnePierreDeuxCoupsResult {
 }
 
 const PRELEVEMENTS_SOCIAUX_PCT = 17.2;
-const PLAFOND_DEFICIT_FONCIER = 10750;
+const PLAFOND_DEFICIT_FONCIER = 10700;
 
 export function mensualitePretConstant(capital: number, tauxAnnuelPct: number, annees: number): number {
   const r = tauxAnnuelPct / 100 / 12;
@@ -48,6 +48,22 @@ export function simulerUnePierreDeuxCoups(params: UnePierreDeuxCoupsParams): Une
   const r = params.taegPct / 100 / 12;
   const mensualiteCredit = mensualitePretConstant(params.montantEmprunte, params.taegPct, params.dureeCredit);
 
+  // Intérêt annuel moyen sur toute la durée du crédit, utilisé pour le calcul fiscal.
+  // À mensualité et taux de distribution inchangés, l'effort net reste ainsi stable
+  // d'une année sur l'autre, au lieu de suivre l'échéancier réel d'amortissement
+  // (intérêts dégressifs) qui le ferait varier chaque année pour un lecteur non averti.
+  // Le capital restant dû (donc le patrimoine net) continue lui d'utiliser l'échéancier réel.
+  let totalInterets = 0;
+  {
+    let capitalTemp = params.montantEmprunte;
+    for (let mois = 0; mois < params.dureeCredit * 12; mois += 1) {
+      const interets = capitalTemp * r;
+      totalInterets += interets;
+      capitalTemp = Math.max(0, capitalTemp - (mensualiteCredit - interets));
+    }
+  }
+  const interetsAnnuelMoyen = params.dureeCredit > 0 ? totalInterets / params.dureeCredit : 0;
+
   const serie: UnePierreDeuxCoupsAnnee[] = [];
   let capitalRestant = params.montantEmprunte;
   let capitalComptant = params.versementInitial;
@@ -57,11 +73,9 @@ export function simulerUnePierreDeuxCoups(params: UnePierreDeuxCoupsParams): Une
   for (let annee = 1; annee <= params.horizonAnnees; annee += 1) {
     const enCredit = annee <= params.dureeCredit;
 
-    let interetsAnnuels = 0;
     if (enCredit) {
       for (let mois = 0; mois < 12; mois += 1) {
         const interets = capitalRestant * r;
-        interetsAnnuels += interets;
         capitalRestant = Math.max(0, capitalRestant - (mensualiteCredit - interets));
       }
     }
@@ -69,7 +83,8 @@ export function simulerUnePierreDeuxCoups(params: UnePierreDeuxCoupsParams): Une
     const valeurPartsCredit = params.montantEmprunte * Math.pow(1 + params.revalorisationCreditPct / 100, annee);
     const revenuFoncierBrut = valeurPartsCredit * (params.rendementCreditPct / 100);
 
-    const base = revenuFoncierBrut - interetsAnnuels;
+    const interetsPourFiscalite = enCredit ? interetsAnnuelMoyen : 0;
+    const base = revenuFoncierBrut - interetsPourFiscalite;
     let impot: number;
     if (base < 0) {
       const deficit = -base;

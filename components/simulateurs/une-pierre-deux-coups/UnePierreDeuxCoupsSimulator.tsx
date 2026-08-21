@@ -92,22 +92,9 @@ export default function UnePierreDeuxCoupsSimulator() {
       </div>
 
       <div className="overflow-hidden rounded-[18px] border border-line bg-cream-card">
-        <div className="border-b border-line px-6 py-4">
-          <div className="flex items-baseline justify-between gap-3">
-            <h3 className="text-sm font-semibold text-ink">Synthèse année par année</h3>
-            <span className="text-xs text-text-muted">Effort net = mensualité − revenus SCPI nets après fiscalité</span>
-          </div>
-          <p className="mt-2 text-xs leading-relaxed text-text-muted">
-            À taux et loyer inchangés, l&apos;effort net augmente chaque année : sur un crédit amortissable, la
-            part d&apos;intérêts (déductible du revenu foncier) diminue au fil du remboursement tandis que la
-            part de capital (non déductible) augmente. Le revenu foncier imposable progresse donc mécaniquement,
-            l&apos;impôt dû aussi — ce qui réduit le revenu net perçu, même si la mensualité et le rendement
-            SCPI restent fixes. Si les intérêts dépassent le loyer brut en début de crédit, le déficit foncier
-            créé est imputable sur le revenu global (dans la limite de 10 750 €/an) puis reporté sur vos revenus
-            fonciers des 10 années suivantes — ce report est bien pris en compte dans la simulation et peut
-            temporairement stabiliser l&apos;effort, avant que la hausse ne reprenne une fois le déficit reporté
-            consommé.
-          </p>
+        <div className="flex items-baseline justify-between gap-3 border-b border-line px-6 py-4">
+          <h3 className="text-sm font-semibold text-ink">Synthèse année par année</h3>
+          <span className="text-xs text-text-muted">Effort net = mensualité − revenus SCPI nets après fiscalité</span>
         </div>
         <div className="max-h-[520px] overflow-y-auto overflow-x-auto">
           <table className="w-full min-w-[640px] border-collapse text-sm">
