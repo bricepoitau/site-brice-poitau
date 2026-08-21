@@ -88,20 +88,20 @@ export default function ScpiForm({ params, onChange }: ScpiFormProps) {
       </div>
 
       <div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <span className="text-sm text-text-muted">Réinvestir les loyers</span>
           <button
             type="button"
             role="switch"
             aria-checked={params.reinvestirLoyers}
             onClick={() => set("reinvestirLoyers", !params.reinvestirLoyers)}
-            className={`relative h-6 w-11 rounded-full transition-colors ${
+            className={`relative h-6 w-11 shrink-0 appearance-none rounded-full border-0 p-0 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-gold-soft ${
               params.reinvestirLoyers ? "bg-gold" : "bg-line"
             }`}
           >
             <span
-              className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                params.reinvestirLoyers ? "translate-x-[22px]" : "translate-x-0.5"
+              className={`absolute top-0.5 left-0.5 block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                params.reinvestirLoyers ? "translate-x-[22px]" : "translate-x-0"
               }`}
             />
           </button>

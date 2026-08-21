@@ -39,7 +39,7 @@ export default function RessourcesPage() {
 
       <RevealOnScroll delay={0.1} className="mt-16">
         <div className="mb-8 flex items-baseline justify-between gap-4">
-          <h2 className="text-xl font-[450] text-ink">Nos partenaires</h2>
+          <h2 className="text-xl font-[450] text-ink">Mes partenaires</h2>
           <span className="text-xs text-text-muted">Liste non exhaustive</span>
         </div>
 

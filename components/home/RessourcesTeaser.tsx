@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
-const items = ["Nos partenaires", "Habilitations & diplômes"];
+const items = ["Mes partenaires", "Habilitations & diplômes"];
 
 export default function RessourcesTeaser() {
   const ref = useRef<HTMLDivElement>(null);
@@ -31,7 +31,7 @@ export default function RessourcesTeaser() {
               Un réseau de partenaires solide, une expertise vérifiable
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[#C7C1B0]">
-              Nos partenaires, nos habilitations professionnelles et nos diplômes — pour que vous sachiez
+              Mes partenaires, mes habilitations professionnelles et mes diplômes — pour que vous sachiez
               précisément avec qui vous travaillez.
             </p>
             <Link
