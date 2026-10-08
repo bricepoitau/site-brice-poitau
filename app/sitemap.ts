@@ -13,6 +13,7 @@ const routes = [
   "/simulateurs/une-pierre-deux-coups",
   "/simulateurs/prelevement-source",
   "/simulateurs/mon-budget",
+  "/simulateurs/vases-communicants",
   "/ressources",
   "/a-propos",
   "/rdv",

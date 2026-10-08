@@ -57,4 +57,11 @@ export const simulateurs: SimulateurEntry[] = [
       "Saisir son budget manuellement en ligne, ou télécharger l'outil complet pour importer et classer son relevé bancaire sur son ordinateur.",
     href: "/simulateurs/mon-budget",
   },
+  {
+    tag: "Ingénierie patrimoniale",
+    title: "Les vases communicants",
+    description:
+      "Voir comment l'économie d'impôt du PER et les revenus de la SCPI reviennent réduire votre effort d'épargne réel.",
+    href: "/simulateurs/vases-communicants",
+  },
 ];
