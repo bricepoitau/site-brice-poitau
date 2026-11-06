@@ -25,7 +25,7 @@ export default function UnePierreDeuxCoupsForm({ params, onChange }: UnePierreDe
             label="Montant emprunté"
             value={params.montantEmprunte}
             displayValue={euros(params.montantEmprunte)}
-            min={50000}
+            min={10000}
             max={500000}
             step={5000}
             onChange={(v) => set("montantEmprunte", v)}
